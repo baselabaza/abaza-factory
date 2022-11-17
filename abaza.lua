@@ -86,7 +86,7 @@ Token = Information.Token
 UserBot = Information.UserBot
 abaza = Token:match("(%d+)")
 os.execute('sudo rm -fr .CallBack-Bot/'..abaza)
-luatele = luatele.set_config{api_id=1846213,api_hash='c545c613b78f18a30744970910124d53',session_name=abaza,token=Token}
+LuaTele = luatele.set_config{api_id=1846213,api_hash='c545c613b78f18a30744970910124d53',session_name=abaza,token=Token}
 function var(value)
 print(serpent.block(value, {comment=false}))   
 end 
@@ -153,7 +153,7 @@ end
 return JoinChannel
 end
 function send(chat,rep,text,parse,dis,clear,disn,back,markup)
-luatele.sendText(chat,rep,text,parse,dis, clear, disn, back, markup)
+LuaTele.sendText(chat,rep,text,parse,dis, clear, disn, back, markup)
 end
 if msg.sender and msg.sender.user_id then
 if msg.sender.user_id == tonumber(abaza) then
