@@ -154,16 +154,6 @@ memkey = luatele.replyMarkup{type = 'keyboard',resize = true,is_personal = true,
 data = {
 {
 {text = 'صنع بوت',type = 'text'},{text = 'حذف البوت', type = 'text'},
-},
-{
-{text = 'الغاء',type = 'text'},{text = 'كيفية عمل توكن للبوت',type = 'text'},
-},
-{
-{text = 'مطورين المصنع',type = 'text'},
-},
-{
-{text = 'مزيد من المصانع والبوتات الخارقه',type = 'text'},
-},
 }
 }
 if data.sender then
