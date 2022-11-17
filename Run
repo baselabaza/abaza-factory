@@ -42,22 +42,15 @@ cd luarocks-3.3.0
 sudo luarocks install luarocks
 sudo luarocks install luasec
 sudo luarocks install luasocket
-apt install python3
-apt install python3-pip
-pip3 install yt-dlp
-pip3 install ffmpeg 
-apt install ffmpeg 
-apt install gnome-calculator
-pip3 install gtts
 cd ../..
 rm -rf tmp
 unzip luatele.zip
-sudo lua5.3 abaza.lua
+sudo lua5.3 black.lua
 ;;
 2)
 echo -e "\e[1m\e[32mThe bot is running now : جاري تشغيل البوت الان : \e[0m"
 sleep 2
 unzip luatele.zip
-sudo lua5.3 abaza.lua
+sudo lua5.3 black.lua
 ;;
 esac
