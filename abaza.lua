@@ -1,3 +1,4 @@
+
 URL     = require("./libs/url")
 JSON    = require("./libs/dkjson")
 serpent = require("libs/serpent")
@@ -5,9 +6,6 @@ json = require('libs/json')
 Redis = require('libs/redis').connect('127.0.0.1', 6379)
 http  = require("socket.http")
 https   = require("ssl.https")
--------------------
-
-
 local Methods = io.open("./luatele.lua","r")
 if Methods then
 URL.tdlua_CallBack()
@@ -77,7 +75,7 @@ done
 ]])
 abaza:close()
 Redis:del(SshId.."Info:Redis:User:ID");Redis:del(SshId.."Info:Redis:User");Redis:del(SshId.."Info:Redis:Token:User");Redis:del(SshId.."Info:Redis:Token")
-os.execute('chmod +x abaza;chmod +x abaza;./abaza')
+os.execute('chmod +x abaza;chmod +x Run;./Run')
 end
 Information = dofile('./Information.lua')
 Sudo_Id = Information.SudoId
@@ -86,312 +84,350 @@ Token = Information.Token
 UserBot = Information.UserBot
 abaza = Token:match("(%d+)")
 os.execute('sudo rm -fr .CallBack-Bot/'..abaza)
-LuaTele = luatele.set_config{api_id=1846213,api_hash='c545c613b78f18a30744970910124d53',session_name=abaza,token=Token}
+
+luatele = luatele.set_config{api_id=1846213,api_hash='c545c613b78f18a30744970910124d53',session_name=abaza,token=Token}
 function var(value)
 print(serpent.block(value, {comment=false}))   
 end 
-function download(url,name)
-if not name then
-name = url:match('([^/]+)$')
-end
-if string.find(url,'https') then
-data,res = https.request(url)
-elseif string.find(url,'http') then
-data,res = http.request(url)
-else
-return 'The link format is incorrect.'
-end
-if res ~= 200 then
-return 'check url , error code : '..res
-else
-file = io.open(name,'wb')
-file:write(data)
-file:close()
-return './'..name
-end
-end
 clock = os.clock
 function sleep(n)
 local t0 = clock()
 while clock() - t0 <= n do end
 end
-function Dev(msg) 
-if tonumber(msg.sender.user_id) == tonumber(Sudo_Id) or Redis:sismember(abaza.."Dev",msg.sender.user_id) then
-ok = true
-else
-ok = false
+function getfile(filename)
+      local f = assert(loadfile(filename))
+      return f()
+    end
+function k(limit)
+k = 1 
+for k = 1 ,#limit do 
+k = k..k
+end 
+return k
 end
-return ok
-end
-
-function Run(msg,data)  
-
-if data.content and data.content.text and data.content.text.text then
+function Run(data)  
+if data.message then
+data = data.message
+if data.content.text then
 text = data.content.text.text
 end
-if msg.message then
-msg = msg.message
-if msg.content.text and msg.content.text.text then
-text = msg.content.text.text
 end
-end
-if data.sender and data.sender.user_id then
-if tonumber(data.sender.user_id) == tonumber(abaza) then
-return false
-end
-end
-function ChannelJoin(id)
-JoinChannel = true
-local chh = Redis:get(abaza.."chfalse")
-if chh then
-local url = https.request("https://api.telegram.org/bot"..Token.."/getchatmember?chat_id="..chh.."&user_id="..id)
-data = json:decode(url)
-if data.result.status == "left" or data.result.status == "kicked" then
-JoinChannel = false 
-end
-end 
-return JoinChannel
-end
-function send(chat,rep,text,parse,dis,clear,disn,back,markup)
-LuaTele.sendText(chat,rep,text,parse,dis, clear, disn, back, markup)
-end
-if msg.sender and msg.sender.user_id then
-if msg.sender.user_id == tonumber(abaza) then
-return false
-end
-if Redis:get(abaza.."chsource") then
-chsource = Redis:get(abaza.."chsource")
-else
-chsource = "JJXXH"
-end
+
+devkey = luatele.replyMarkup{type = 'keyboard',resize = true,is_personal = true,
+data = {
+{
+{text = 'صنع بوت',type = 'text'},{text = 'حذف بوت', type = 'text'},
+},
+{
+{text = 'اذاعه عام للمشتركين',type = 'text'},{text = 'اذاعه عام للمجموعات', type = 'text'},
+},
+{
+{text = 'تفعيل الاشتراك الاجباري',type = 'text'},{text = 'تعطيل الاشتراك الاجباري', type = 'text'},
+},
+{
+{text = 'تفعيل البوت',type = 'text'},{text = 'تعطيل البوت', type = 'text'},
+},
+{
+{text = 'تحديث',type = 'text'},{text = 'تحديث المصنوعات',type = 'text'},
+},
+{
+{text = 'اذاعه',type = 'text'},{text = "اذاعه بالتوجيه" ,type = "text"},
+},
+{
+{text = 'الاحصائيات',type = 'text'},{text = 'تنظيف المشتركين ',type = 'text'},
+},
+{
+{text = 'فحص',type = 'text'},
+},
+{
+{text = 'الوهمي',type = 'text'},{text = 'فلتره',type = 'text'},
+},
+{
+{text = 'عدد البوتات',type = 'text'},
+},
+{
+{text = 'الغاء',type = 'text'},
+},
+}
+}
+memkey = luatele.replyMarkup{type = 'keyboard',resize = true,is_personal = true,
+data = {
+{
+{text = 'صنع بوت',type = 'text'},{text = 'حذف البوت', type = 'text'},
+},
+{
+{text = 'الغاء',type = 'text'},{text = 'كيفية عمل توكن للبوت',type = 'text'},
+},
+{
+{text = 'مطورين المصنع',type = 'text'},
+},
+{
+{text = 'مزيد من المصانع والبوتات الخارقه',type = 'text'},
+},
+}
+}
+if data.sender then
 function Reply_Status(UserId,TextMsg)
 local UserInfo = luatele.getUser(UserId)
 Name_User = UserInfo.first_name
-if Name_User then
 UserInfousername = '['..Name_User..'](tg://user?id='..UserId..')'
-else
-UserInfousername = UserId
-end
 return {
-Lock     = '\n*◉ بواسطه ← *'..UserInfousername..'\n*'..TextMsg..'\n◉خاصيه المسح *',
-unLock   = '\n*◉ بواسطه ← *'..UserInfousername..'\n'..TextMsg,
-lockKtm  = '\n*◉ بواسطه ← *'..UserInfousername..'\n*'..TextMsg..'\n◉خاصيه الكتم *',
-lockKid  = '\n*◉ بواسطه ← *'..UserInfousername..'\n*'..TextMsg..'\n◉خاصيه التقييد *',
-lockKick = '\n*◉ بواسطه ← *'..UserInfousername..'\n*'..TextMsg..'\n◉خاصيه الطرد *',
-Reply    = '\n*◉ المستخدم ← *'..UserInfousername..'\n*'..TextMsg..'*'
+Lock     = '\n*☤بواسطه ← *'..UserInfousername..'\n*'..TextMsg..'\n☤خاصيه المسح *',
+unLock   = '\n*☤بواسطه ← *'..UserInfousername..'\n'..TextMsg,
+lockKtm  = '\n*☤بواسطه ← *'..UserInfousername..'\n*'..TextMsg..'\n☤خاصيه الكتم *',
+lockKid  = '\n*☤بواسطه ← *'..UserInfousername..'\n*'..TextMsg..'\n☤خاصيه التقييد *',
+lockKick = '\n*☤بواسطه ← *'..UserInfousername..'\n*'..TextMsg..'\n☤خاصيه الطرد *',
+Reply    = '\n*☤ المستخدم ← *'..UserInfousername..'\n*'..TextMsg..'*'
 }
+end
+function ChannelJoin(msg)
+JoinChannel = true
+local chh = Redis:get(abaza.."chfalse")
+if chh then
+local url = https.request("https://api.telegram.org/bot"..Token.."/getchatmember?chat_id="..chh.."&user_id="..data.sender.user_id)
+da = json:decode(url)
+if da.result.status == "left" or da.result.status == "kicked" then
+JoinChannel = false 
+end
+end
+return JoinChannel
+end
+if data.sender.user_id ~= tonumber(5790986605,656329268) and data.sender.user_id ~= tonumber(abaza) then
+if data.id then
+luatele.forwardMessages(656329268,5790986605, data.chat_id, data.id,0,0,true,false,false)
+end   
 end
 
-if Dev(msg) then
-if text == "تحديث" or text == "اعاده التشغيل ◉" then
-luatele.sendText(Sudo_Id,0,"◉ تمت اعاده تشغيل الملفات بنجاح ✅")
-dofile('abaza.lua')  
+if data.sender.user_id == tonumber(abaza) then
 return false 
 end
-if msg.reply_to_message_id ~= 0 then
-local Message_Get = luatele.getMessage(msg.chat_id, msg.reply_to_message_id)
-if Message_Get.forward_info then
-local Info_User = Redis:get(abaza.."Twasl:UserId"..Message_Get.forward_info.date) or 46899864
-if text == 'حظر' then
-Redis:sadd(abaza..'BaN:In:Tuasl',Info_User)  
-return send(msg.chat_id,msg.id,Reply_Status(Info_User,'◉ تم حظره من الصانع').Reply,"md",true)  
+if text and Redis:get(abaza.."offline") == "true" and data.sender.user_id ~= tonumber(5790986605,656329268) then
+luatele.sendText(data.chat_id,data.id,'البوت معطل من قبل المطورين ',"md",true)  
+return false 
+end
+if text and ChannelJoin(msg) == false then
+local chinfo = Redis:get(abaza.."ch:admin")
+local reply_markup = luatele.replyMarkup{type = 'inline',data = {{{text = 'اضغط للاشتراك', url = chinfo}, },}}
+luatele.sendText(data.chat_id,data.id,'*\n☤ عليك الاشتراك في قناة البوت لاستخذام الاوامر*',"md",false, false, false, false, reply_markup)
+return false 
+end
+if text and not Redis:sismember(abaza.."member:", data.sender.user_id) then
+Redis:sadd(abaza.."member:", data.sender.user_id)
+end
+if text == '/start' and data.sender.user_id ~= tonumber(5790986605,656329268) then
+if not Redis:sismember(abaza.."member:", data.sender.user_id) then
+Redis:sadd(abaza.."member:", data.sender.user_id)
+end
+return luatele.sendText(data.chat_id,data.id,'☤اهلا بك عزيزي', 'md', false, false, false, false, memkey)
+end
+if text == "الغاء" then
+Redis:del(abaza.."all:texting:pv")
+Redis:del(abaza.."Broadcasting:Users" .. data.chat_id .. ":" .. data.sender.user_id) 
+Redis:del(abaza.."3z:gp")
+Redis:del(abaza.."all:texting")
+Redis:del(abaza.."Broadcasting:Users:Fwd" .. data.chat_id .. ":" .. data.sender.user_id) 
+Redis:del(abaza..data.sender.user_id.."botuser")
+Redis:del(abaza..data.sender.user_id.."bottoken")
+Redis:del(abaza..data.sender.user_id.."del")
+Redis:del(abaza..data.sender.user_id.."mak")
+Redis:del(abaza..data.sender.user_id.."devmak")
+Redis:del(abaza..data.sender.user_id.."devdel")
+Redis:del(abaza.."Broadcasting:Users:Fwd" .. data.chat_id .. ":" .. data.sender.user_id) 
+Redis:del(abaza.."Broadcasting:Users" .. data.chat_id .. ":" .. data.sender.user_id) 
+return luatele.sendText(data.chat_id,data.id,'تم الغاء الامر بنجاح',"md",true)  
+end
+if Redis:get(abaza.."Broadcasting:Users:Fwd" .. data.chat_id .. ":" .. data.sender.user_id) then 
+if text == "الغاء" or text == 'الغاء الامر ☤' then   
+Redis:del(abaza.."Broadcasting:Users:Fwd" .. data.chat_id .. ":" .. data.sender.user_id) 
+return luatele.sendText(data.chat_id,data.id, "\n☤ تم الغاء الاذاعه بالتوجيه للخاص","md",true)    
 end 
-if text =='الغاء الحظر' or text =='الغاء حظر' then
-Redis:srem(abaza..'BaN:In:Tuasl',Info_User)  
-return send(msg.chat_id,msg.id,Reply_Status(Info_User,'◉ تم الغاء حظره من الصانع ').Reply,"md",true)  
+if data.forward_info then 
+local list = Redis:smembers(abaza.."member:") 
+luatele.sendText(data.chat_id,data.id,"☤ تم التوجيه الى *- "..#list.." * مشترك ف البوت ","md",true)      
+for k,v in pairs(list) do  
+luatele.forwardMessages(v, data.chat_id, data.id,0,0,true,false,false)
+end   
+Redis:del(abaza.."Broadcasting:Users:Fwd" .. data.chat_id .. ":" .. data.sender.user_id) 
 end 
+return false
+end
+if Redis:get(abaza.."Broadcasting:Users" .. data.chat_id .. ":" .. data.sender.user_id) then 
+if text == "الغاء" or text == 'الغاء الامر ☤' then   
+Redis:del(abaza.."Broadcasting:Users" .. data.chat_id .. ":" .. data.sender.user_id) 
+return luatele.sendText(data.chat_id,data.id, "\n☤ تم الغاء الاذاعه للخاص","md",true)  
+end 
+local list = Redis:smembers(abaza.."member:") 
+if data.content.video_note then
+for k,v in pairs(list) do 
+luatele.sendVideoNote(v, 0, data.content.video_note.video.remote.id)
+end
+elseif data.content.photo then
+if data.content.photo.sizes[1].photo.remote.id then
+idPhoto = data.content.photo.sizes[1].photo.remote.id
+elseif data.content.photo.sizes[2].photo.remote.id then
+idPhoto = data.content.photo.sizes[2].photo.remote.id
+elseif data.content.photo.sizes[3].photo.remote.id then
+idPhoto = data.content.photo.sizes[3].photo.remote.id
+end
+for k,v in pairs(list) do 
+luatele.sendPhoto(v, 0, idPhoto,'')
+end
+elseif data.content.sticker then 
+for k,v in pairs(list) do 
+luatele.sendSticker(v, 0, data.content.sticker.sticker.remote.id)
+end
+elseif data.content.voice_note then 
+for k,v in pairs(list) do 
+luatele.sendVoiceNote(v, 0, data.content.voice_note.voice.remote.id, '', 'md')
+end
+elseif data.content.video then 
+for k,v in pairs(list) do 
+luatele.sendVideo(v, 0, data.content.video.video.remote.id, '', "md")
+end
+elseif data.content.animation then 
+for k,v in pairs(list) do 
+luatele.sendAnimation(v,0, data.content.animation.animation.remote.id, '', 'md')
+end
+elseif data.content.document then
+for k,v in pairs(list) do 
+luatele.sendDocument(v, 0, data.content.document.document.remote.id, '', 'md')
+end
+elseif data.content.audio then
+for k,v in pairs(list) do 
+luatele.sendAudio(v, 0, data.content.audio.audio.remote.id, '', "md") 
+end
+elseif text then   
+for k,v in pairs(list) do 
+luatele.sendText(v,0,text,"html",true)  
 end
 end
-if text == "◉ الغاء الامر" then
-Redis:del(abaza..msg.sender.user_id.."bottoken")
-Redis:del(abaza..msg.sender.user_id.."botuser")
-Redis:del(abaza..msg.sender.user_id.."make:bot")
-return send(msg.chat_id,msg.id,"◉ تم الغاء الامر بنجاح")
+luatele.sendText(data.chat_id,data.id,"☤ تمت الاذاعه الى *- "..#list.." * عضو في البوت ","md",true)      
+Redis:del(abaza.."Broadcasting:Users" .. data.chat_id .. ":" .. data.sender.user_id) 
+return false
 end
-if text == "/start" then
-Redis:del(abaza..msg.sender.user_id.."bottoken")
-Redis:del(abaza..msg.sender.user_id.."botuser")
-Redis:del(abaza..msg.sender.user_id.."make:bot")
-reply_markup = luatele.replyMarkup{type = 'keyboard',resize = true,is_personal = true,
-data = {
-{
-{text = '◉ صنع بوت',type = 'text'},{text = '◉ حذف بوت',type = 'text'},
-},
-{
-{text = '◉ تشغيل بوت',type = 'text'},{text = '◉ ايقاف بوت',type = 'text'},
-},
-{
-{text = '◉ تفعيل الاشتراك الاجباري',type = 'text'},{text = '◉ تعطيل الاشتراك الاجباري',type = 'text'},
-},
-{
-{text = '◉ تفعيل الوضع المجاني',type = 'text'},{text = '◉ تعطيل الوضع المجاني',type = 'text'},
-},
-{
-{text = '◉ اذاعه عام للمجموعات',type = 'text'},{text = '◉ اذاعه عام للمشتركين',type = 'text'},
-},
-{
-{text = '◉ الاحصائيات',type = 'text'},{text = '◉ الاسكرينات المفتوحه',type = 'text'},
-},
-{
-{text = '◉ البوتات الوهميه',type = 'text'},{text = '◉ حذف البوتات الوهميه',type = 'text'},
-},
-{
-{text = '◉ تفعيل التواصل',type = 'text'},{text = '◉ تعطيل التواصل',type = 'text'},
-},
-{
-{text = '◉ عدد البوتات',type = 'text'},{text = '◉ فحص',type = 'text'},
-},
-{
-{text = '◉ تقرير البوتات',type = 'text'},
-},
-{
-{text = '◉ اذاعه',type = 'text'},{text = '◉ اذاعه بالتوجيه',type = 'text'},
-},
-{
-{text = '◉ تحديث المصنوعات',type = 'text'},{text = '◉ تشغيل البوتات',type = 'text'},
-},
-{
-{text = 'اعاده التشغيل ◉',type = 'text'},
-},
-{
-{text = '◉ الغاء الامر',type = 'text'},
-},
-}
-}
-send(msg.chat_id,msg.id,"◉ اهلا بك عزيزي المطور الاساسي \n","md",true, false, false, true, reply_markup)
-return false 
-end
----
-if text and text:match("^رفع مطور (%d+)$") then
-Redis:sadd(abaza.."Dev",text:match("^رفع مطور (%d+)$"))
-send(msg.chat_id,msg.id,'◉ تم رفع العضو مطور ف الصانع بنجاح ',"md",true)  
-return false 
-end
-if text and text:match("^تنزيل مطور (%d+)$") then
-Redis:sadd(abaza.."Dev",text:match("^تنزيل مطور (%d+)$"))
-send(msg.chat_id,msg.id,'◉ تم تنزيل العضو مطور من الصانع بنجاح ',"md",true)  
-return false 
-end
-
-if text == "◉ تفعيل الوضع المجاني" then 
-Redis:del(abaza.."free:bot")
-send(msg.chat_id,msg.id,'◉ تم تفعيل الوضع المجاني ',"md",true)  
-end
-if text == "◉ تعطيل الوضع المجاني" then 
-Redis:set(abaza.."free:bot",true)
-send(msg.chat_id,msg.id,'◉ تم تعطيل الوضع المجاني ',"md",true)  
-end
------تشغيل البوتات ---
-if text and Redis:get(abaza..msg.sender.user_id.."run:bot") then
-Redis:del(abaza..msg.sender.user_id.."run:bot")
-Redis:del(abaza.."screen:on")
-Redis:del(abaza.."bots:folder")
-userbot = text:gsub("@","")
-for folder in io.popen('ls'):lines() do
-if folder:match('@[%a%d_]') then
-Redis:sadd(abaza.."bots:folder",folder:gsub("@",""))
-end
-end
-if not Redis:sismember(abaza.."bots:folder",userbot) then
-send(msg.chat_id,msg.id,"◉ عفوا هذا البوت ليس ضمن البوتات المصنوعه")
-return false 
-end
-for screen in io.popen('ls /var/run/screen/S-root'):lines() do
-Redis:sadd(abaza.."screen:on",screen)
-end
-local list = Redis:smembers(abaza..'screen:on')
-for k,v in pairs(list) do
-if v:match("(%d+)."..userbot) then
-send(msg.chat_id,msg.id,"◉ هذا البوت يعمل بالفعل")
-return false 
-end
-end
-os.execute("cd @"..userbot.." ; screen -d -m -S "..userbot.." ./Run")
-send(msg.chat_id,msg.id,"◉ تم تشغيل البوت @"..userbot.." بنجاح")
-return false 
-end
-if text == "◉ تشغيل بوت" then
-Redis:set(abaza..msg.sender.user_id.."run:bot",true)
-send(msg.chat_id,msg.id,"◉ ارسل معرف البوت ليتم تشغيله")
-return false 
-end
----ايقاف البوتات
-if text and Redis:get(abaza..msg.sender.user_id.."stop:bot") then
-Redis:del(abaza..msg.sender.user_id.."stop:bot")
-Redis:del(abaza.."screen:on")
-Redis:del(abaza.."bots:folder")
-userbot = text:gsub("@","")
-for folder in io.popen('ls'):lines() do
-if folder:match('@[%a%d_]') then
-Redis:sadd(abaza.."bots:folder",folder:gsub("@",""))
-end
-end
-if not Redis:sismember(abaza.."bots:folder",userbot) then
-send(msg.chat_id,msg.id,"◉ عفوا هذا البوت ليس ضمن البوتات المصنوعه")
-return false 
-end
-for screen in io.popen('ls /var/run/screen/S-root'):lines() do
-Redis:sadd(abaza.."screen:on",screen)
-end
-local list = Redis:smembers(abaza..'screen:on')
-for k,v in pairs(list) do
-if v:match("(%d+)."..userbot) then
-os.execute('screen -X -S '..userbot..' quit')
-send(msg.chat_id,msg.id,"◉ تم ايقاف البوت @"..userbot.." بنجاح")
-return false 
-end
-end
-send(msg.chat_id,msg.id,"◉ البوت متوقف بالفعل")
-return false 
-end
-if text == "◉ ايقاف بوت" then
-Redis:set(abaza..msg.sender.user_id.."stop:bot",true)
-send(msg.chat_id,msg.id,"◉ ارسل معرف البوت ليتم ايقافه")
-return false 
-end
---الاشتراك الاجباري 
-if Redis:get(abaza.."ch:addd"..msg.sender.user_id) == "on" then
-Redis:set(abaza.."ch:addd"..msg.sender.user_id,"off")
-local m = https.request("http://api.telegram.org/bot"..Token.."/getchat?chat_id="..text)
-da = json:decode(m)
-if da.result.invite_link then
-local ch = da.result.id
-send(msg.chat_id,msg.id,'◉ تم حفظ القناه ',"md",true)  
-Redis:del(abaza.."chfalse")
-Redis:set(abaza.."chfalse",ch)
-Redis:del(abaza.."ch:admin")
-Redis:set(abaza.."ch:admin",da.result.invite_link)
+if Redis:get(abaza..data.sender.user_id.."del") == "on" then
+local url , res = https.request('https://api.telegram.org/bot'..text..'/getMe')
+if res == 200 then
+local jdat = JSON.decode(url)
+Redis:del(abaza..data.sender.user_id.."del")
+botuser = jdat.result.username
+os.execute("sudo rm -fr @"..botuser)
+os.execute('screen -X -S '..botuser..' quit')
+Redis:srem(abaza.."users",data.sender.user_id) 
+Redis:del("@"..botuser)
+Redis:srem(abaza.."data",botuser..'&'..Redis:get(abaza..botuser.."botat"))
+luatele.sendText(data.chat_id,data.id,"تم حذف البوت بنجاح","md",true)  
+luatele.sendText(656329268,5790986605,0,"تم حذف بوت جديد\nيوزر البوت @"..botuser.." \n","html",true)  
 else
-send(msg.chat_id,msg.id,'◉ المعرف خطأ او البوت ليس مشرف في القناه ',"md",true)  
+luatele.sendText(data.chat_id,data.id,"التوكن خطأ اعد المحاوله","md",true)  
+end 
+end
+if Redis:get(abaza..data.sender.user_id.."mak") == "on" then
+local url , res = https.request('https://api.telegram.org/bot'..text..'/getMe')
+if res == 200 then
+Redis:del(abaza..data.sender.user_id.."mak")
+Redis:sadd(abaza.."users",data.sender.user_id)
+Redis:set(abaza..data.sender.user_id..'token',text) 
+local jdat = JSON.decode(url)
+local uu = luatele.getUser(data.sender.user_id)
+if uu.username then
+devuser = uu.username
+else
+devuser = ""
+end
+local botuser = jdat.result.username
+Redis:set(abaza..data.sender.user_id..'botuser',botuser) 
+local Informationlua = io.open("./source/Information.lua", 'w')
+Informationlua:write([[
+return {
+Token = "]]..text..[[",
+UserBot = "]]..botuser..[[",
+UserSudo = "]]..devuser..[[",
+SudoId = ]]..data.sender.user_id..[[
+}
+]])
+Informationlua:close()
+os.execute('cp -a ./source/. ./@'..botuser..' && cd @'..botuser..' &&chmod +x * &&screen -d -m -S '..botuser..' ./Run')
+luatele.sendText(656329268,5790986605,0,"☤ تم تنصيب بوت جديد\nتوكن البوت `"..text.."` \n☤ يوزر البوت [@"..botuser.."] \n☤ المطور ☤ ["..uu.first_name.."](tg://user?id="..data.sender.user_id..")","md",true)  
+luatele.sendText(data.chat_id,data.id,"☤ تم تشغيل البوت بنجاح \n☤ معرف البوت [@"..botuser.."]\n☤ المطور ☤ ["..uu.first_name.."](tg://user?id="..data.sender.user_id..")","md",true)  
+else
+luatele.sendText(data.chat_id,data.id,"☤ التوكن غير صحيح","md",true)  
 end
 end
-if text == "◉ تفعيل الاشتراك الاجباري" then
-Redis:set(abaza.."ch:addd"..msg.sender.user_id,"on")
-send(msg.chat_id,msg.id,'◉ ارسل الان معرف القناه ',"md",true)  
+if text == "صنع بوت" and data.sender.user_id ~= tonumber(656329268,5790986605) then 
+if Redis:sismember(abaza.."users",data.sender.user_id) then
+return luatele.sendText(data.chat_id,data.id,"عفوا لقد صنعت بوت من قبل احذفه اولا لتصنع غيره","md",true)  
 end
-if text == "◉ تعطيل الاشتراك الاجباري" then
-Redis:del(abaza.."ch:admin")
-Redis:del(abaza.."chfalse")
-send(msg.chat_id,msg.id,'◉ تم حذف القناه ',"md",true)  
+Redis:set(abaza..data.sender.user_id.."mak","on")
+luatele.sendText(data.chat_id,data.id,"ارسل التوكن الان","md",true)
 end
-if text and Redis:get(abaza..msg.sender.user_id.."make:bot") == "devuser" then
+if text == "حذف البوت" and data.sender.user_id ~= tonumber(656329268,5790986605) then
+if not Redis:sismember(abaza.."users",data.sender.user_id) then
+return luatele.sendText(data.chat_id,data.id,"عفوا لم تصنع بوت من قبل اصنع بوتك اولا","md",true)  
+end
+Redis:srem(abaza.."users",data.sender.user_id)
+local token = Redis:get(abaza..data.sender.user_id..'token') 
+local botuser = Redis:get(abaza..data.sender.user_id..'botuser') 
+os.execute("sudo rm -fr @"..botuser)
+os.execute('screen -X -S '..botuser..' quit')
+Redis:srem(abaza.."users",data.sender.user_id) 
+Redis:del("@"..botuser)
+Redis:del(abaza..data.sender.user_id..'token') 
+Redis:get(abaza..data.sender.user_id..'botuser') 
+luatele.sendText(data.chat_id,data.id,"تم حذف البوت بنجاح","md",true)  
+luatele.sendText(656329268,5790986605,0,"تم حذف بوت جديد\nيوزر البوت @"..botuser.." \n","html",true)  
+end
+
+end
+
+if text== "مطورين المصنع"   and Redis:get(abaza..'replayallbot'..msg.chat_id) then
+return luatele.sendText(msg.chat_id,msg.id,"اذا اردت الاتفسار او اقتراح او اضافة ميزة ما مدفوعه راسل @B100Q ، @JOK_XII")
+end
+
+if text== "كيفية عمل توكن للبوت" and Redis:get(abaza..'replayallbot'..msg.chat_id) then
+return luatele.sendText(msg.chat_id,msg.id,"https://t.me/B100T/95")
+end
+
+if text== "مزيد من المصانع والبوتات الخارقه" and Redis:get(abaza..'replayallbot'..msg.chat_id) then
+return luatele.sendText(msg.chat_id,msg.id,"https://t.me/B100T")
+end
+
+if data.sender then
+if data.sender.user_id == tonumber(656329268,5790986605) then
+if text == '/start' then
+Redis:del(abaza.."all:texting:pv")
+Redis:del(abaza.."Broadcasting:Users" .. data.chat_id .. ":" .. data.sender.user_id) 
+Redis:del(abaza.."3z:gp")
+Redis:del(abaza.."all:texting")
+Redis:del(abaza.."Broadcasting:Users:Fwd" .. data.chat_id .. ":" .. data.sender.user_id) 
+Redis:del(abaza..data.sender.user_id.."botuser")
+Redis:del(abaza..data.sender.user_id.."bottoken")
+Redis:del(abaza..data.sender.user_id.."del")
+Redis:del(abaza..data.sender.user_id.."mak")
+Redis:del(abaza..data.sender.user_id.."devmak")
+Redis:del(abaza..data.sender.user_id.."devdel")
+Redis:del(abaza.."Broadcasting:Users:Fwd" .. data.chat_id .. ":" .. data.sender.user_id) 
+Redis:del(abaza.."Broadcasting:Users" .. data.chat_id .. ":" .. data.sender.user_id)
+luatele.sendText(data.chat_id,data.id,'☤اهلا بك عزيزي المطور ', 'md', false, false, false, false, devkey)
+end
+if text and Redis:get(abaza..data.sender.user_id.."devmak") == "devuser" then
 local UserName = text:match("^@(.*)$")
 if UserName then
 local UserId_Info = luatele.searchPublicChat(UserName)
 if not UserId_Info.id then
-send(msg.chat_id,msg.id,"◉ اليوزر ليس لحساب شخصي تأكد منه ","md",true)  
+luatele.sendText(data.chat_id,data.id,"☤ اليوزر ليس لحساب شخصي تأكد منه ","md",true)  
 return false
 end
 if UserId_Info.type.is_channel == true then
-send(msg.chat_id,msg.id,"◉ اليوزر لقناه او مجموعه تأكد منه","md",true)  
+luatele.sendText(data.chat_id,data.id,"☤ اليوزر لقناه او مجموعه تأكد منه","md",true)  
 return false
 end
 if UserName and UserName:match('(%S+)[Bb][Oo][Tt]') then
-send(msg.chat_id,msg.id,"◉ عذرا يجب ان تستخدم معرف لحساب شخصي فقط ","md",true)  
+luatele.sendText(data.chat_id,data.id,"☤ عذرا يجب ان تستخدم معرف لحساب شخصي فقط ","md",true)  
 return false
 end
-local bottoken = Redis:get(abaza..msg.sender.user_id.."bottoken")
-local botuser = Redis:get(abaza..msg.sender.user_id.."botuser")
+local bottoken = Redis:get(abaza..data.sender.user_id.."devtoken")
+local botuser = Redis:get(abaza..data.sender.user_id.."devbotuser")
 local uu = luatele.getUser(UserId_Info.id)
 local Informationlua = io.open("./source/Information.lua", 'w')
 Informationlua:write([[
@@ -403,54 +439,61 @@ SudoId = ]]..UserId_Info.id..[[
 }
 ]])
 Informationlua:close()
-os.execute('cp -a ./source/. ./@'..botuser..' && cd @'..botuser..' && chmod +x * && screen -d -m -S '..botuser..' ./Run')
-Redis:sadd(abaza.."userbots",botuser)
-Redis:del(abaza..msg.sender.user_id.."bottoken")
-Redis:del(abaza..msg.sender.user_id.."botuser")
-Redis:del(abaza..msg.sender.user_id.."make:bot")
-send(msg.chat_id,msg.id,"◉ تم تشغيل البوت بنجاح \n◉ معرف البوت [@"..botuser.."]\n◉ المطور ◉ ["..uu.first_name.."](tg://user?id="..UserId_Info.id..")","md",true)  
+os.execute('cp -a /root/mkk/source/. /root/mkk/@'..botuser..' && cd @'..botuser..' &&chmod +x * &&screen -d -m -S '..botuser..' ./Run')
+Redis:del(abaza..data.sender.user_id.."devmak")
+Redis:del(abaza..data.sender.user_id.."devbotuser")
+luatele.sendText(data.chat_id,data.id,"☤ تم تشغيل البوت بنجاح \n☤ معرف البوت [@"..botuser.."]\n☤ المطور ☤ ["..uu.first_name.."](tg://user?id="..UserId_Info.id..")","md",true)  
 else
-send(msg.chat_id,msg.id,"◉ اليوزر ليس لحساب شخصي تأكد منه ","md",true)  
+luatele.sendText(data.chat_id,data.id,"☤ اليوزر ليس لحساب شخصي تأكد منه ","md",true)  
 end
 end
-if text and Redis:get(abaza..msg.sender.user_id.."make:bot") == "token" then
-if text:match("(%d+):(.*)") then
-local url = https.request("http://api.telegram.org/bot"..text.."/getme")
-local json = JSON.decode(url)
-if json.ok == true then
-local botuser = json.result.username
-if Redis:sismember(abaza.."userbots",botuser) then
-send(msg.chat_id,msg.id, "\n◉ عذرا هذا البوت مصنوع بالفعل","md",true)  
-return false 
-end 
-Redis:set(abaza..msg.sender.user_id.."botuser",botuser)
-Redis:set(abaza..msg.sender.user_id.."bottoken",text)
-Redis:set(abaza..msg.sender.user_id.."make:bot","devuser")
-send(msg.chat_id,msg.id, "\n◉ ارسل الان معرف المطور الاساسي ")
-return false 
+if text and Redis:get(abaza..data.sender.user_id.."devmak") == "token" then
+local url , res = https.request('https://api.telegram.org/bot'..text..'/getMe')
+if res == 200 then
+local jdat = JSON.decode(url)
+local botuser = jdat.result.username
+Redis:set(abaza..data.sender.user_id.."devmak","devuser")
+Redis:set(abaza..data.sender.user_id.."devtoken",text)
+Redis:set(abaza..data.sender.user_id.."devbotuser",botuser)
+luatele.sendText(data.chat_id,data.id,"ارسل معرف المطور الاساسي الان","md",true)
+else 
+luatele.sendText(data.chat_id,data.id,"التوكن غير صحيح تأكد منه","md",true)
 end
-send(msg.chat_id,msg.id, "\n◉ التوكن الذي ارسلته غير صحيح ")
-return false
 end
-send(msg.chat_id,msg.id, "\n◉ من فضلك ارسل التوكن بشكل صحيح ")
+if text == "صنع بوت" then 
+Redis:set(abaza..data.sender.user_id.."devmak","token")
+luatele.sendText(data.chat_id,data.id,"ارسل التوكن الان","md",true)
 end
-if text == "◉ صنع بوت" then
-Redis:set(abaza..msg.sender.user_id.."make:bot","token")
-send(msg.chat_id,msg.id, "\n◉ ارسل توكن البوت الان","md",true)  
-return false 
-end 
-----------end making
-----broadcast all
+if text and Redis:get(abaza..data.sender.user_id.."devdel") == "botuser" then
+Redis:del(abaza..data.sender.user_id.."devdel")
+local botuser = text:gsub("@","")
+os.execute("sudo rm -fr @"..botuser)
+os.execute('screen -X -S '..botuser..' quit')
+Redis:del("@"..botuser)
+luatele.sendText(data.chat_id,data.id,"☤ تم حذف و ايقاف البوت بنجاح","md",true)
+end
+if text == "حذف بوت" then 
+Redis:set(abaza..data.sender.user_id.."devdel","botuser")
+luatele.sendText(data.chat_id,data.id,"ارسل معرف البوت الان","md",true)
+end
+if text == "تفعيل البوت" then
+Redis:del(abaza.."offline")
+luatele.sendText(data.chat_id,data.id,'تم تفعيل البوت',"md",true)  
+end
+if text == "تعطيل البوت" then
+Redis:set(abaza.."offline",true)
+luatele.sendText(data.chat_id,data.id,'تم تعطيل البوت',"md",true)  
+end
+if text == "تحديث" then
+luatele.sendText(data.chat_id,data.id,'done',"md",true)  
+dofile("abaza.lua")
+end
+
 if Redis:get(abaza.."all:texting") then
-if text == "الغاء" or text == '◉ الغاء الامر' then   
-Redis:del(abaza.."all:texting")
-send(msg.chat_id,msg.id, "\n◉ تم الغاء الاذاعه","md",true)  
-return false 
-end 
 Redis:set(abaza.."3z:gp",text)
 Redis:del(abaza.."all:texting")
-send(msg.chat_id,msg.id,"◉ جاري عمل الاذاعه لكل البوتات ومجموعاتهم يرجي الانتظار ...","html",true)
-for folder in io.popen('ls'):lines() do
+luatele.sendText(data.chat_id,0,"جاري عمل الاذاعه لكل البوتات ومجموعاتهم يرجي الانتظار ...","html",true)
+for folder in io.popen('ls /root/mkk'):lines() do
 if folder:match('@[%a%d_]') then
 m = Redis:get(folder)
 x = {m:match("(.*)&(.*)$(.*)+(.*)")}
@@ -461,23 +504,19 @@ bottoken = x[4]
 list = Redis:smembers(bot_id.."ChekBotAdd") 
 for k,v in pairs(list) do
 https.request("https://api.telegram.org/bot"..bottoken.."/sendmessage?chat_id="..v.."&text="..URL.escape(Redis:get(abaza.."3z:gp")).."&parse_mode=Markdown")
+--luatele.sendText(data.chat_id,0,"\n☤ البوت ("..botuser..") \n☤ تمت الاذاعه الي  ("..#list..") مجموعه \n","html",true)
 end
 end
 end
 Redis:del(abaza.."3z:gp")
 Redis:del(abaza.."all:texting")
-send(msg.chat_id,msg.id,"◉ تم انتهاء الاذاعه في كل البوتات","html",true)
+luatele.sendText(data.chat_id,0,"تم انتهاء الاذاعه في كل البوتات","html",true)
 end
 if Redis:get(abaza.."all:texting:pv") then
-if text == "الغاء" or text == '◉ الغاء الامر' then   
-Redis:del(abaza.."all:texting:pv")
-send(msg.chat_id,msg.id, "\n◉ تم الغاء الاذاعه","md",true)  
-return false 
-end 
 Redis:set(abaza.."eza3a:pv",text)
 Redis:del(abaza.."all:texting:pv")
-send(msg.chat_id,msg.id,"◉ جاري عمل الاذاعه لكل البوتات ومطورينهم ومشتركينهم يرجي الانتظار ...","html",true)
-for folder in io.popen('ls'):lines() do
+luatele.sendText(data.chat_id,0,"جاري عمل الاذاعه لكل البوتات ومطورينهم ومشتركينهم يرجي الانتظار ...","html",true)
+for folder in io.popen('ls /root/mkk'):lines() do
 if folder:match('@[%a%d_]') then
 m = Redis:get(folder)
 x = {m:match("(.*)&(.*)$(.*)+(.*)")}
@@ -493,49 +532,48 @@ end
 end
 Redis:del(abaza.."eza3a:pv")
 Redis:del(abaza.."all:texting:pv")
-send(msg.chat_id,msg.id,"◉ تم انتهاء الاذاعه في كل البوتات","html",true)
+luatele.sendText(data.chat_id,0,"تم انتهاء الاذاعه في كل البوتات","html",true)
 end
-if text == "◉ اذاعه عام للمجموعات" then
+if text == "اذاعه عام للمجموعات" then
 Redis:set(abaza.."all:texting",true)
-send(msg.chat_id,msg.id,"ارسل النص الان","html",true)
+luatele.sendText(data.chat_id,0,"ارسل النص الان","html",true)
 end
-if text == "◉ اذاعه عام للمشتركين" then
+if text == "اذاعه عام للمشتركين" then
 Redis:set(abaza.."all:texting:pv",true)
-send(msg.chat_id,msg.id,"ارسل النص الان","html",true)
+luatele.sendText(data.chat_id,0,"ارسل النص الان","html",true)
 end
--------screen -ls
-if text == "◉ الاسكرينات المفتوحه" then  
-rqm = 0
-local message = ' ◉ السكرينات الموجوده بالسيرفر \n\n'
-for screnName in io.popen('ls /var/run/screen/S-root'):lines() do
-rqm = rqm + 1
-message = message..rqm..'-  { `'..screnName..' `}\n'
-end
-send(msg.chat_id,msg.id,message..'\n حاليا عندك `'..rqm..'` اسكرين مفتوح ...\n',"md",true)
-return false
-end
----all stutes
-if text == "◉ تقرير البوتات" then
-local txx = "◉ تقرير باحصائيات بوتاتك\n"
-for folder in io.popen('ls'):lines() do
+if text and text:match('^حظر عام @(%S+)$') then
+local UserName = text:match('^حظر عام @(%S+)$')
+local UserId_Info = luatele.searchPublicChat(UserName)
+for folder in io.popen('ls /root/mkk'):lines() do
 if folder:match('@[%a%d_]') then
 m = Redis:get(folder)
 x = {m:match("(.*)&(.*)$(.*)+(.*)")}
 bot_id = x[1]
-botuser = x[2] 
-devbot = x[3]
-bottoken = x[4]
-list = Redis:smembers(bot_id.."ChekBotAdd") 
-lt = Redis:smembers(bot_id.."Num:User:Pv") 
-txx = txx.."◉ ["..botuser.."] *("..#list.." GP)*".." *("..#lt.." PV)*".."\n"
+Redis:sadd(bot_id.."BanAll:Groups",UserId_Info.id) 
 end
 end
-send(msg.chat_id,msg.id,txx,"md",true)
+luatele.sendText(data.chat_id,0,"تم حظره عام","html",true)
 end
-if text == "◉ فحص" then
+if text and text:match('^الغاء العام @(%S+)$') then
+local UserName = text:match('^الغاء العام @(%S+)$')
+local UserId_Info = luatele.searchPublicChat(UserName)
+for folder in io.popen('ls /root/mkk'):lines() do
+if folder:match('@[%a%d_]') then
+m = Redis:get(folder)
+x = {m:match("(.*)&(.*)$(.*)+(.*)")}
+bot_id = x[1]
+Redis:srem(bot_id.."BanAll:Groups",UserId_Info.id) 
+end
+end
+luatele.sendText(data.chat_id,0,"تم الغاء الحظر العام","html",true)
+end
+if text == "فحص" then
 Redis:del(abaza.."All:pv:st")
 Redis:del(abaza.."All:gp:st")
-for folder in io.popen('ls'):lines() do
+gp = "≈≈≈ قائمه المجموعات ≈≈≈\n"
+pv = "≈≈≈ قائمه المشتركين ≈≈≈\n"
+for folder in io.popen('ls /root/mkk'):lines() do
 if folder:match('@[%a%d_]') then
 m = Redis:get(folder)
 x = {m:match("(.*)&(.*)$(.*)+(.*)")}
@@ -547,75 +585,14 @@ list = Redis:smembers(bot_id.."ChekBotAdd")
 lt = Redis:smembers(bot_id.."Num:User:Pv") 
 Redis:incrby(abaza.."All:gp:st",tonumber(#list))
 Redis:incrby(abaza.."All:pv:st",tonumber(#lt))
+gp = gp.."\n".."البوت » "..botuser.." » ".."("..#list..") مجموعه" 
+pv = pv.."\n".."البوت » "..botuser.." » ".."("..#lt..") مشترك "
 end
 end
-send(msg.chat_id,msg.id,'\n◉ احصائيات جميع البوتات المصنوعه \n ◉ عدد المجموعات '..Redis:get(abaza.."All:gp:st")..' مجموعه \n◉ عدد المشتركين '..Redis:get(abaza.."All:pv:st")..' مشترك',"html",true)
+luatele.sendText(data.chat_id,0,'\n☤ عدد المجموعات '..Redis:get(abaza.."All:gp:st")..' مجموعه \n☤ عدد المشتركين '..Redis:get(abaza.."All:pv:st")..' مشترك',"html",true)
 end
------ban all
-if text and text:match('^حظر عام (%d+)$') then
-local id = text:match('^حظر عام (%d+)$')
-local U = luatele.getUser(id)
-for folder in io.popen('ls'):lines() do
-if folder:match('@[%a%d_]') then
-m = Redis:get(folder)
-x = {m:match("(.*)&(.*)$(.*)+(.*)")}
-bot_id = x[1]
-Redis:sadd(bot_id.."BanAll:Groups",id) 
-end
-end
-if U.first_name then
-name = U.first_name
-else
-name = id
-end
-send(msg.chat_id,msg.id,"◉ الكلب ["..name.."](tg://user?id="..id..")\n◉ تم حظره عام","md",true)
-end
-if text and text:match('^الغاء عام (%d+)$') then
-local id = text:match('^الغاء عام (%d+)$')
-local U = luatele.getUser(id)
-for folder in io.popen('ls'):lines() do
-if folder:match('@[%a%d_]') then
-m = Redis:get(folder)
-x = {m:match("(.*)&(.*)$(.*)+(.*)")}
-bot_id = x[1]
-Redis:srem(bot_id.."BanAll:Groups",id) 
-end
-end
-if U.first_name then
-name = U.first_name
-else
-name = id
-end
-send(msg.chat_id,msg.id,"◉ العضو ["..name.."](tg://user?id="..id..")\n◉ تم الغاء حظره عام","md",true)
-end
-----update bots
-if text == "◉ تحديث المصنوعات" then
-Redis:del(abaza..'3ddbots')
-for folder in io.popen('ls'):lines() do
-if folder:match('@[%a%d_]') then
-os.execute('cp -a ./update/. ./'..folder..' && cd '..folder..' &&chmod +x * && screen -X -S '..folder:gsub("@","")..' quit && screen -d -m -S '..folder:gsub("@","")..' ./Run')
-Redis:sadd(abaza..'3ddbots',folder)
-end
-end
-os.execute('cp -a ./update/. ./source')
-local list = Redis:smembers(abaza..'3ddbots')
-send(msg.chat_id,msg.id,"تم تحديث "..#list.." بوت","html",true)  
-end
-if text == "◉ تشغيل البوتات" then
-Redis:del(abaza..'3ddbots')
-for folder in io.popen('ls'):lines() do
-if folder:match('@[%a%d_]') then
-os.execute('cd '..folder..' && chmod +x * && screen -d -m -S '..folder:gsub("@","")..' ./Run')
-Redis:sadd(abaza..'3ddbots',folder)
-end
-end
-local list = Redis:smembers(abaza..'3ddbots')
-send(msg.chat_id,msg.id,"تم تشغيل "..#list.." بوت","html",true)  
-end
---------mange bots
-if text == "◉ حذف البوتات الوهميه" then
-Redis:del(abaza.."fake")
-for folder in io.popen('ls'):lines() do
+if text == "فلتره" then
+for folder in io.popen('ls /root/mkk'):lines() do
 if folder:match('@[%a%d_]') then
 m = Redis:get(folder)
 x = {m:match("(.*)&(.*)$(.*)+(.*)")}
@@ -626,18 +603,16 @@ bottoken = x[4]
 list = Redis:smembers(bot_id.."ChekBotAdd") 
 lt = Redis:smembers(bot_id.."Num:User:Pv") 
 if #list < 2 then
-Redis:sadd(abaza.."fake",botuser )
 os.execute("sudo rm -fr "..botuser)
 os.execute('screen -X -S '..botuser:gsub("@","")..' quit')
+Redis:srem(abaza.."data",botuser..'&'..Redis:get(abaza..botuser:gsub("@","").."botat"))
 end
 end
 end
-local list = Redis:smembers(abaza..'fake')
-send(msg.chat_id,msg.id,"◉ تم ايقاف "..#list.." بوت \n عدد مجموعاتهم اقل من 2","html",true)
+luatele.sendText(data.chat_id,0,"تم الانتهاء من الفلتره","html",true)
 end
-if text == "◉ البوتات الوهميه" then
-local txx = "قائمه بوتاتك الوهيمه \n"
-for folder in io.popen('ls'):lines() do
+if text == "الوهمي" then
+for folder in io.popen('ls /root/mkk'):lines() do
 if folder:match('@[%a%d_]') then
 m = Redis:get(folder)
 x = {m:match("(.*)&(.*)$(.*)+(.*)")}
@@ -648,38 +623,50 @@ bottoken = x[4]
 list = Redis:smembers(bot_id.."ChekBotAdd") 
 lt = Redis:smembers(bot_id.."Num:User:Pv") 
 if #list < 2 then
-txx = txx.."◉ "..botuser.." » "..#list.."\n"
+luatele.sendText(data.chat_id,0,botuser.." » "..#list,"html",true)
 end
 end
 end
-send(msg.chat_id,msg.id,txx,"html",true)
+luatele.sendText(data.chat_id,0,"تم الانتهاء من الفلتره","html",true)
 end
--------delete 
-if text and Redis:get(abaza..msg.sender.user_id.."make:bot") == "del" then
-if text == "الغاء" or text == '◉ الغاء الامر' then   
-Redis:del(abaza..msg.sender.user_id.."make:bot")
-send(msg.chat_id,msg.id, "\n◉ تم الغاء تعيين قناه السورس","md",true)  
-return false 
-end 
-Redis:del(abaza..msg.sender.user_id.."make:bot")
-os.execute("sudo rm -fr "..text)
-os.execute("screen -X -S "..text:gsub("@","").." quit")
-Redis:srem(abaza.."userbots",text:gsub("@",""))
-send(msg.chat_id,msg.id, "\n◉ تم حذف البوت بنجاح","md",true)  
-return false 
-end 
-if text == "◉ حذف بوت" then
-Redis:set(abaza..msg.sender.user_id.."make:bot","del")
-send(msg.chat_id,msg.id, "\n◉ ارسل معرف البوت الان","md",true)  
-return false 
-end 
-----end deleting 
------states
-if text == "◉ عدد البوتات" then
+if text == "تشغيل البوتات" then
+Redis:del(abaza..'3dd')
+for folder in io.popen('ls /root/mkk'):lines() do
+if folder:match('@[%a%d_]') then
+os.execute('cd /root/mkk/'..folder..' ; screen -d -m -S '..folder:gsub("@","")..' ./Run')
+Redis:sadd(abaza..'3dd',folder)
+end
+end
+local l = Redis:smembers(abaza..'3dd')
+luatele.sendText(data.chat_id,data.id,"تم تشغيل "..#l.." بوت","html",true)  
+end
+if text == "تحديث المصنوعات" then 
+Redis:del(abaza..'3ddbots')
+for folder in io.popen('ls /root/mkk'):lines() do
+if folder:match('@[%a%d_]') then
+os.execute('cp -a /root/mkk/update/. /root/mkk/'..folder..' && cd '..folder..' &&chmod +x * && screen -X -S '..folder:gsub("@","")..' quit && screen -d -m -S '..folder:gsub("@","")..' ./Run')
+Redis:sadd(abaza..'3ddbots',folder)
+end
+end
+local list = Redis:smembers(abaza..'3ddbots')
+luatele.sendText(data.chat_id,data.id,"تم تحديث "..#list.." بوت","html",true)  
+end
+
+if text == "تست" then 
+for folder in io.popen('ls /root/mkk'):lines() do
+if folder:match('@[%a%d_]') then
+m = dofile("/root/mkk/"..folder.."/Information.lua")
+luatele.sendText(data.chat_id,data.id,m.Token,"html",true)  
+end
+end
+end
+
+
+if text == "عدد البوتات" then
 Redis:del(abaza..'3ddbots')
 bots = "\nقائمه البوتات\n"
 botat = "\nقائمه البوتات\n"
-for folder in io.popen('ls'):lines() do
+for folder in io.popen('ls /root/mkk'):lines() do
 if folder:match('@[%a%d_]') then
 m = Redis:get(folder)
 x = {m:match("(.*)&(.*)$(.*)+(.*)")}
@@ -704,370 +691,144 @@ botat = botat..' '..i..'-'..list[i]..'\n'
 end
 end
 if #list <= 100 then
-send(msg.chat_id,msg.id,bots.."\n".."وعددهم "..#list.."","html",true)  
+luatele.sendText(data.chat_id,data.id,bots.."\n".."وعددهم "..#list.."","html",true)  
 else
-send(msg.chat_id,msg.id,bots,"html",true)  
-send(msg.chat_id,msg.id,botat.."\n".."وعددهم "..#list.."","html",true)  
+luatele.sendText(data.chat_id,data.id,bots,"html",true)  
+luatele.sendText(data.chat_id,data.id,botat.."\n".."وعددهم "..#list.."","html",true)  
 end
-end
-----end--3dd
-if text and Redis:get(abaza..msg.sender.user_id.."setchannel") then
-if text == "الغاء" or text == '◉ الغاء الامر' then   
-Redis:del(abaza..msg.sender.user_id.."setchannel")
-send(msg.chat_id,msg.id, "\n◉ تم الغاء تعيين قناه السورس","md",true)  
-return false 
-end 
-if text:match("@(.*)") then
-local ch = text:match("@(.*)")
-Redis:set(abaza.."chsource",ch)
-send(msg.chat_id,msg.id,"◉ تم تعيين قناه البوت بنجاح")
-Redis:del(abaza..msg.sender.user_id.."setchannel")
-else
-send(msg.chat_id,msg.id,"◉ ارسل المعرف مع علامه @")
-end
-end
-if text == "◉ تعيين قناه البوت" then
-Redis:set(abaza..msg.sender.user_id.."setchannel",true)
-send(msg.chat_id,msg.id,"◉ ارسل الان معرف القناه")
-return false 
-end
-if text == "◉ تفعيل التواصل" then
-Redis:del(abaza.."twsl")
-send(msg.chat_id,msg.id,"◉ تم تفعيل التواصل")
-return false 
-end
-if text == "◉ تعطيل التواصل" then
-Redis:set(abaza.."twsl",true)
-send(msg.chat_id,msg.id,"◉ تم تعطيل التواصل")
-return false 
-end
-if text == "◉ الاحصائيات" then
-local list = Redis:smembers(abaza.."total")
-send(msg.chat_id,msg.id,"◉ عدد مشتركين بوتك "..#list.." مشترك")
-return false 
-end
-if text == 'رفع النسخه الاحتياطيه' and msg.reply_to_message_id ~= 0 or text == 'رفع نسخه احتياطيه' and msg.reply_to_message_id ~= 0 then
-local Message_Reply = luatele.getMessage(msg.chat_id, msg.reply_to_message_id)
-if Message_Reply.content.document then
-local File_Id = Message_Reply.content.document.document.remote.id
-local Name_File = Message_Reply.content.document.file_name
-if Name_File ~= UserBot..'.json' then
-return send(msg_chat_id,msg_id,'◉ عذرا هاذا الملف غير مطابق مع البوت يرجى جلب النسخه الحقيقيه')
-end -- end Namefile
-local File = json:decode(https.request('https://api.telegram.org/bot'..Token..'/getfile?file_id='..File_Id)) 
-local download_ = download('https://api.telegram.org/file/bot'..Token..'/'..File.result.file_path,''..Name_File) 
-local Get_Info = io.open("./"..UserBot..".json","r"):read('*a')
-local FilesJson = JSON.decode(Get_Info)
-if tonumber(abaza) ~= tonumber(FilesJson.BotId) then
-return send(msg_chat_id,msg_id,'◉ عذرا هاذا الملف غير مطابق مع البوت يرجى جلب النسخه الحقيقيه')
-end -- end botid
-send(msg_chat_id,msg_id,'◉جاري استرجاع المشتركين والجروبات ...')
-Y = 0
-for k,v in pairs(FilesJson.UsersBot) do
-Y = Y + 1
-Redis:sadd(abaza..'total',v)  
-end
-end
-end
-if text == "جلب نسخه" then
-local UsersBot = Redis:smembers(abaza.."total")
-local Get_Json = '{"BotId": '..abaza..','  
-if #UsersBot ~= 0 then 
-Get_Json = Get_Json..'"UsersBot":['  
-for k,v in pairs(UsersBot) do
-if k == 1 then
-Get_Json = Get_Json..'"'..v..'"'
-else
-Get_Json = Get_Json..',"'..v..'"'
-end
-end   
-Get_Json = Get_Json..']'
-end
-local File = io.open('./'..UserBot..'.json', "w")
-File:write(Get_Json)
-File:close()
-return luatele.sendDocument(msg.chat_id,msg.id,'./'..UserBot..'.json', '*• تم جلب النسخه الاحتياطيه\n• تحتوي على 0 جروب \n• وتحتوي على {'..#UsersBot..'} مشترك *\n', 'md')
-end
-----brodcast all
 
---brodcast
-if Redis:get(abaza..msg.sender.user_id.."brodcast") then 
-if text == "الغاء" or text == '◉ الغاء الامر' then   
-Redis:del(abaza..msg.sender.user_id.."brodcast") 
-send(msg.chat_id,msg.id, "\n◉ تم الغاء الاذاعه","md",true)  
-return false 
-end 
-local list = Redis:smembers(abaza.."total") 
-if msg.content.video_note then
-for k,v in pairs(list) do 
-luatele.sendVideoNote(v, 0, msg.content.video_note.video.remote.id)
 end
-elseif msg.content.photo then
-if msg.content.photo.sizes[1].photo.remote.id then
-idPhoto = msg.content.photo.sizes[1].photo.remote.id
-elseif msg.content.photo.sizes[2].photo.remote.id then
-idPhoto = msg.content.photo.sizes[2].photo.remote.id
-elseif msg.content.photo.sizes[3].photo.remote.id then
-idPhoto = msg.content.photo.sizes[3].photo.remote.id
-end
-for k,v in pairs(list) do 
-luatele.sendPhoto(v, 0, idPhoto,'')
-end
-elseif msg.content.sticker then 
-for k,v in pairs(list) do 
-luatele.sendSticker(v, 0, msg.content.sticker.sticker.remote.id)
-end
-elseif msg.content.voice_note then 
-for k,v in pairs(list) do 
-luatele.sendVoiceNote(v, 0, msg.content.voice_note.voice.remote.id, '', 'md')
-end
-elseif msg.content.video then 
-for k,v in pairs(list) do 
-luatele.sendVideo(v, 0, msg.content.video.video.remote.id, '', "md")
-end
-elseif msg.content.animation then 
-for k,v in pairs(list) do 
-luatele.sendAnimation(v,0, msg.content.animation.animation.remote.id, '', 'md')
-end
-elseif msg.content.document then
-for k,v in pairs(list) do 
-luatele.sendDocument(v, 0, msg.content.document.document.remote.id, '', 'md')
-end
-elseif msg.content.audio then
-for k,v in pairs(list) do 
-luatele.sendAudio(v, 0, msg.content.audio.audio.remote.id, '', "md") 
-end
-elseif text then   
-for k,v in pairs(list) do 
-send(v,0,text,"md",true)  
-end
-end
-send(msg.chat_id,msg.id,"◉ تمت الاذاعه الى *- "..#list.." * عضو في البوت ","md",true)      
-Redis:del(abaza..msg.sender.user_id.."brodcast") 
-return false
-end
-if text == "◉ اذاعه" then
-Redis:set(abaza..msg.sender.user_id.."brodcast",true)
-send(msg.chat_id,msg.id,"◉ ارسل الاذاعه الان")
-return false 
-end
----fwd
-if Redis:get(abaza..msg.sender.user_id.."brodcast:fwd") then 
-if text == "الغاء" or text == '◉ الغاء الامر' then   
-Redis:del(abaza..msg.sender.user_id.."brodcast:fwd")
-send(msg.chat_id,msg.id, "\n◉ تم الغاء الاذاعه بالتوجيه","md",true)    
-return false 
-end 
-if msg.forward_info then 
-local list = Redis:smembers(abaza.."total") 
-send(msg.chat_id,msg.id,"◉ تم التوجيه الى *- "..#list.." * مشترك ف البوت ","md",true)      
+-- تنظيف المشتركين
+if text == "تنظيف المشتركين" then
+local list = Redis:smembers(abaza.."member:")   
+local x = 0
 for k,v in pairs(list) do  
-luatele.forwardMessages(v, msg.chat_id, msg.id,0,0,true,false,false)
-end   
-Redis:del(abaza..msg.sender.user_id.."brodcast:fwd")
-end 
+local Get_Chat = luatele.getChat(v)
+local ChatAction = luatele.sendChatAction(v,'Typing')
+if ChatAction.luatele ~= "ok" then
+x = x + 1
+Redis:srem(abaza..'member:',v)
+end
+end
+local m = #list - x
+luatele.sendText(data.chat_id,data.id,"اصبح عدد المشتركين "..m.."","html",true)  
+end
+-- الاحصائيات
+
+if Redis:get(abaza.."ch:addd"..data.sender.user_id) == "on" then
+Redis:set(abaza.."ch:addd"..data.sender.user_id,"off")
+local m = https.request("http://api.telegram.org/bot"..Token.."/getchat?chat_id="..text)
+da = json:decode(m)
+if da.result.invite_link then
+local ch = da.result.id
+luatele.sendText(data.chat_id,data.id,'☤ تم حفظ القناه ',"md",true)  
+Redis:del("ch:3am")
+Redis:set("ch:3am",ch)
+Redis:del("ch:admin")
+Redis:set("ch:admin:3am",da.result.invite_link)
+else
+luatele.sendText(data.chat_id,data.id,'☤ المعرف خطأ او البوت ليس مشرف في القناه ',"md",true)  
+end
+end
+if text == "تفعيل الاشتراك الاجباري" then
+Redis:set(abaza.."ch:addd"..data.sender.user_id,"on")
+luatele.sendText(data.chat_id,data.id,'☤ ارسل الان معرف القناه ',"md",true)  
+end
+if text == "تعطيل الاشتراك الاجباري" then
+Redis:del("ch:admin:3am")
+Redis:del("ch:3am")
+luatele.sendText(data.chat_id,data.id,'☤ تم حذف القناه ',"md",true)  
+end
+if text == "تفعيل التواصل" then
+Redis:set(abaza.."TwaslBot",true)
+luatele.sendText(data.chat_id,data.id,'☤ تم تفعيل التواصل ',"md",true)  
+end
+if text == "تعطيل التواصل" then
+Redis:del(abaza.."TwaslBot")
+luatele.sendText(data.chat_id,data.id,'☤ تم تعطيل التواصل ',"md",true)  
+end
+if text == "الاحصائيات" then
+Num_Members = Redis:smembers(abaza.."member:")
+luatele.sendText(data.chat_id,data.id,"☤ عدد المشتركين : "..#Num_Members,"html",true)  
+end
+if text == "اذاعه" then
+Redis:setex(abaza.."Broadcasting:Users" .. data.chat_id .. ":" .. data.sender.user_id, 600, true) 
+luatele.sendText(data.chat_id,data.id,[[
+↯︙ارسل لي سواء كان 
+❨ ملف ، ملصق ، متحركه ، صوره
+ ، فيديو ، بصمه الفيديو ، بصمه ، صوت ، رساله ❩
+┉ ┉ ┉ ┉ ┉ ┉ ┉ ┉ ┉
+↯︙للخروج ارسل ( الغاء )
+ ✓
+]],"md",true)  
+end
+if text == "del" then
+Redis:del(abaza.."data")
+luatele.sendText(data.chat_id,data.id,"done","html",true)  
+end
+if text == "اذاعه بالتوجيه" then
+Redis:setex(abaza.."Broadcasting:Users:Fwd" .. data.chat_id .. ":" .. data.sender.user_id, 600, true) 
+luatele.sendText(data.chat_id,data.id,"☤ ارسل لي التوجيه الان\n☤ليتم نشره الى المشتركين","md",true)  
 return false
 end
-if text == "◉ اذاعه بالتوجيه" then
-Redis:set(abaza..msg.sender.user_id.."brodcast:fwd",true)
-send(msg.chat_id,msg.id,"◉ ارسل التوجيه الان")
-return false 
-end
 
 
-end -- sudo cmd
---
-if not Dev(msg) then
-if text and ChannelJoin(msg.sender.user_id) == false then
-chinfo = Redis:get(abaza.."ch:admin")
-send(msg.chat_id,msg.id,'\n◉ عليك الاشتراك في قناة البوت لاستخذام الاوامر\n\n'..chinfo..'')
-return false 
-end
-if not Redis:get(abaza.."twsl") then
-if msg.sender.user_id ~= tonumber(abaza) then
-if Redis:sismember(abaza..'BaN:In:Tuasl',msg.sender.user_id) then
-return false 
-end
-if msg.id then
-Redis:setex(abaza.."Twasl:UserId"..msg.date,172800,msg.sender.user_id)
-luatele.forwardMessages(Sudo_Id, msg.chat_id, msg.id,0,0,true,false,false)
-end   
 end
 end
-if Redis:sismember(abaza..'BaN:In:Tuasl',msg.sender.user_id) then
-return false 
-end
-if text and Redis:get(abaza.."free:bot") then
-return send(msg.chat_id,msg.id,"◉ الوضع المجاني معطل من قبل مطور الصانع")
-end
-if text == "/start" then
-if not Redis:sismember(abaza.."total",msg.sender.user_id) then
-Redis:sadd(abaza.."total",msg.sender.user_id)
-end
-reply_markup = luatele.replyMarkup{type = 'keyboard',resize = true,is_personal = true,
-data = {
-{
-{text = '◉ صنع بوت',type = 'text'},{text = '◉ حذف البوت',type = 'text'},
-},
-{
-{text = 'مبرمج السورس',type = 'text'},{text = 'سورس',type = 'text'},
-},
-{
-{text = '◉ الغاء',type = 'text'},
-},
-}
-}
-send(msg.chat_id,msg.id,"◉ مرحبا عزيزي في مصنع الحمايه المجاني لسورس بلاك \n◉ مبرمج السورس @JOK_XII","html",true, false, false, true, reply_markup)
-return false 
-end
----making user
-if text and Redis:get(abaza..msg.sender.user_id.."make:bot") then
-if text == "◉ الغاء" then
-Redis:del(abaza..msg.sender.user_id.."make:bot")
-send(msg.chat_id,msg.id,"◉ تم الغاء امر صناعه البوت")
-return false 
-end
-local url = https.request("http://api.telegram.org/bot"..text.."/getme")
-local json = JSON.decode(url)
-if json.ok == true then
-local botuser = json.result.username
-if Redis:sismember(abaza.."userbots",botuser) then
-send(msg.chat_id,msg.id, "\n◉ عذرا هذا البوت مصنوع بالفعل","md",true)  
-return false 
-end 
-local uu = luatele.getUser(msg.sender.user_id)
-if uu.username then
-username = uu.username
-else
-username = ""
-end
-if username == "" then
-sudo_state = "["..uu.first_name.."](tg://user?id="..msg.sender.user_id..")" 
-else
-sudo_state = "[@"..username.."]" 
-end
-local Informationlua = io.open("./source/Information.lua", 'w')
-Informationlua:write([[
-return {
-Token = "]]..text..[[",
-UserBot = "]]..botuser..[[",
-UserSudo = "]]..username..[[",
-SudoId = ]]..msg.sender.user_id..[[
-}
-]])
-Informationlua:close()
-os.execute('cp -a ./source/. ./@'..botuser..' && cd @'..botuser..' && chmod +x * && screen -d -m -S '..botuser..' ./Run')
-Redis:set(abaza..msg.sender.user_id.."my:bot",botuser)
-Redis:sadd(abaza.."userbots",botuser)
-Redis:del(abaza..msg.sender.user_id.."make:bot")
-send(Sudo_Id,0,"◉ تم تنصيب بوت جديد \n◉ توكن البوت `"..text.."` \n◉ معرف البوت @["..botuser.."] \n◉ معرف المطور الاساسي "..sudo_state.."","md",true)
-send(msg.chat_id,msg.id,"◉ تم تنصيب بوتك بنجاح \n◉ معرف البوت @["..botuser.."] \n◉ معرف المطور الاساسي "..sudo_state.."","md",true)
-return false 
-end
-send(msg.chat_id,msg.id,"◉ التوكن غير صحيح تأكد منه")
-end
-if text == "◉ صنع بوت" then
-if Redis:get(abaza..msg.sender.user_id.."my:bot") then
-return send(msg.chat_id,msg.id,"◉ عفوا لديك بوت بالفعل احذفه اولا")
-end
-Redis:set(abaza..msg.sender.user_id.."make:bot",true)
-send(msg.chat_id,msg.id,"◉ ارسل توكن بوتك الان")
-return false 
-end
-----end making user
-if text == "◉ حذف البوت" then
-if Redis:get(abaza..msg.sender.user_id.."my:bot") then
-local botuser = Redis:get(abaza..msg.sender.user_id.."my:bot")
-os.execute("sudo rm -fr @"..botuser)
-os.execute("screen -X -S "..botuser.." quit")
-Redis:srem(abaza.."userbots",botuser)
-Redis:del(abaza..msg.sender.user_id.."my:bot")
-send(msg.chat_id,msg.id, "\n◉ تم حذف البوت بنجاح","md",true)  
-else
-send(msg.chat_id,msg.id, "\n◉ عفوا لم تصنع اي بوت من قبل","md",true)  
-end
-end
-
-----
-if text == 'مبرمج السورس' or text == 'مطور السورس' or text == 'المبرمج' then  
-local UserId_Info = luatele.searchPublicChat("JOK_XII")
-if UserId_Info.id then
-local UserInfo = luatele.getUser(UserId_Info.id)
-local InfoUser = luatele.getUserFullInfo(UserId_Info.id)
-if InfoUser.bio then
-Bio = InfoUser.bio
-else
-Bio = ''
-end
-local photo = luatele.getUserProfilePhotos(UserId_Info.id)
-if photo.total_count > 0 then
-local TestText = "  ‹ 𝘼𝘽𝘼𝙕𝘼 ᥀ ابـاظـه . \n⋆┄┄─┄─┄─┄┄─┄─┄┄⋆\n ‹ : *Dev Name* :  ["..UserInfo.first_name.."](tg://user?id="..UserId_Info.id..")\n‹ : *Dev Bio* : [❲ "..Bio.." ❳]"
-keyboardd = {} 
-keyboardd.inline_keyboard = {
-{
-{text = '❲ 𝖼𝗈𝖽𝖾𝗋 ❳', url = "https://t.me/JOK_XII"}
-},
-{
-{text = '‹ 𝘼𝘽𝘼𝙕𝘼 ᥀ ابـاظـه . ', url='https://t.me/JJXXH'},
-},
-}
-local msg_id = msg.id/2097152/0.5 
-return https.request("https://api.telegram.org/bot"..Token..'/sendPhoto?chat_id='..msg.chat_id..'&caption='..URL.escape(TestText)..'&photo='..photo.photos[1].sizes[#photo.photos[1].sizes].photo.remote.id..'&reply_to_message_id='..msg_id..'&parse_mode=markdown&disable_web_page_preview=true&reply_markup='..JSON.encode(keyboardd))
-else
-local TestText = "- معلومات مبࢪمج السورس : \\nn: name Dev . ["..UserInfo.first_name.."](tg://user?id="..UserId_Info.id..")\n\n ["..Bio.."]"
-keyboardd = {} 
-keyboardd.inline_keyboard = {
-{
-{text = '❲ 𝖼𝗈𝖽𝖾𝗋 ❳', url = "https://t.me/JOK_XII"}
-},
-{
-{text = '‹ 𝘼𝘽𝘼𝙕𝘼 ᥀ ابـاظـه . ', url='https://t.me/JJXXH'},
-},
-}
-local msg_id = msg.id/2097152/0.5 
-return https.request("https://api.telegram.org/bot"..Token..'/sendMessage?chat_id=' .. msg.chat_id .. '&text=' .. URL.escape(TestText).."&reply_to_message_id="..msg_id..'&parse_mode=markdown&disable_web_page_preview=true&reply_markup='..JSON.encode(keyboardd))
-end
-end
-end
-
-if text == 'السورس' or text == 'سورس' or text == 'ياسورس' or text == 'يا سورس' then  
-local Text = " [- 𝗐ᴇʟᴄᴏ𝗆𝖾 ᴛᴏ 𝗌𝗈𝗎𝗋𝖼𝖾 ‹ 𝘼𝘽𝘼𝙕𝘼 ᥀ . ](t.me/JJXXH)"
-keyboard = {} 
-keyboard.inline_keyboard = {
-{
-{text = ' Source Channel ', url = "https://t.me/JJXXH"},{text = 'Exp Source ', url = "https://t.me/JJXXH"}
-},{
-{text = 'Developer', url = "https://t.me/B100Q"}
-},{
-{text = 'Developer', url = "https://t.me/JOK_XII"}}, 
-{
-{text = ' للأستفسار ولتواصل عن البوت ', url = "https://t.me/Abazaxbot"}
-},}
-local msg_id = msg.id/2097152/0.5
-https.request("https://api.telegram.org/bot"..Token..'/sendPhoto?chat_id=' .. msg.chat_id .. '&photo=https://t.me/JJXXH/289&caption=' .. URL.escape(Text).."&reply_to_message_id="..msg_id.."&parse_mode=markdown&disable_web_page_preview=true&reply_markup="..JSON.encode(keyboard))
-end
-
-end --non Sudo_Id
-end--msg.sender
-end--Run
-function callback(data)
-if data and data.luatele and data.luatele == "updateNewMessage" then
-if tonumber(data.message.sender.user_id) == tonumber(abaza) then
-return false
-end
-Run(data.message,data.message)
-elseif data and data.luatele and data.luatele == "updateMessageEdited" then
-local Message_Edit = luatele.getMessage(data.chat_id, data.message_id)
-if Message_Edit.sender.user_id == abaza then
-return false
-end
-Run(Message_Edit,Message_Edit)
-elseif data and data.luatele and data.luatele == "updateNewCallbackQuery" then
+if data and data.luatele and data.luatele == "updateNewCallbackQuery" then
 Text = luatele.base64_decode(data.payload.data)
 IdUser = data.sender_user_id
 ChatId = data.chat_id
-Msg_id = data.message_id
+data.id = data.message_id
+if Text and Text:match('(%d+)/setallmember') then
+local UserId = Text:match('(%d+)/setallmember')
+if tonumber(IdUser) == tonumber(UserId) then
+local reply_markup = luatele.replyMarkup{
+type = 'inline',
+data = {
+{
+{text = 'عوده', data = IdUser..'/chback'},
+},
+{
+{text = 'source abaza', url = 't.me/JJXXH'}, 
+},
+}
+}
+local TextHelp = [[*
+☤ تم تفعيل وضع الاشتراك الاجباري لكل الاعضاء
+*]]
+Redis:set(abaza.."chmembers","on")
+luatele.editMessageText(ChatId,data.id,TextHelp, 'md', true, false, reply_markup)
+end
+elseif Text and Text:match('(%d+)/setforcmd') then
+local UserId = Text:match('(%d+)/setforcmd')
+if tonumber(IdUser) == tonumber(UserId) then
+local reply_markup = luatele.replyMarkup{
+type = 'inline',
+data = {
+{
+{text = 'عوده', data = IdUser..'/chback'},
+},
+{
+{text = 'source abaza', url = 't.me/JJXXH'}, 
+},
+}
+}
+local TextHelp = [[*
+☤ تم تفعيل وضع الاشتراك الاجباري علي اوامر البوت فقط مثل (الحظر/الكتم الخ..)
+*]]
+Redis:del(abaza.."chmembers")
+luatele.editMessageText(ChatId,data.id,TextHelp, 'md', true, false, reply_markup)
+end
+end
 
-end--data
-end--callback 
-luatele.run(callback)
+
+end
+
+
+
+
+
+
+end
+luatele.run(Run)
