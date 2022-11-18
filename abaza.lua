@@ -85,7 +85,7 @@ UserBot = Information.UserBot
 abaza = Token:match("(%d+)")
 os.execute('sudo rm -fr .CallBack-Bot/'..abaza)
 
-luatele = luatele.set_config{api_id=1846213,api_hash='c545c613b78f18a30744970910124d53',session_name=abaza,token=Token}
+LuaTele = luatele.set_config{api_id=1846213,api_hash='c545c613b78f18a30744970910124d53',session_name=abaza,token=Token}
 function var(value)
 print(serpent.block(value, {comment=false}))   
 end 
@@ -113,7 +113,7 @@ text = data.content.text.text
 end
 end
 
-devkey = luatele.replyMarkup{type = 'keyboard',resize = true,is_personal = true,
+devkey = LuaTele.replyMarkup{type = 'keyboard',resize = true,is_personal = true,
 data = {
 {
 {text = 'صنع بوت',type = 'text'},{text = 'حذف بوت', type = 'text'},
@@ -150,25 +150,19 @@ data = {
 },
 }
 }
-memkey = luatele.replyMarkup{type = 'keyboard',resize = true,is_personal = true,
+memkey = LuaTele.replyMarkup{type = 'keyboard',resize = true,is_personal = true,
 data = {
 {
 {text = 'صنع بوت',type = 'text'},{text = 'حذف البوت', type = 'text'},
 },
 {
-{text = 'الغاء',type = 'text'},{text = 'كيفية عمل توكن للبوت',type = 'text'},
-},
-{
-{text = 'مطورين المصنع',type = 'text'},
-},
-{
-{text = 'مزيد من المصانع والبوتات الخارقه',type = 'text'},
+{text = 'الغاء',type = 'text'},
 },
 }
 }
 if data.sender then
 function Reply_Status(UserId,TextMsg)
-local UserInfo = luatele.getUser(UserId)
+local UserInfo = LuaTele.getUser(UserId)
 Name_User = UserInfo.first_name
 UserInfousername = '['..Name_User..'](tg://user?id='..UserId..')'
 return {
@@ -192,33 +186,33 @@ end
 end
 return JoinChannel
 end
-if data.sender.user_id ~= tonumber(5790986605,656329268) and data.sender.user_id ~= tonumber(abaza) then
+if data.sender.user_id ~= tonumber(5790986605) and data.sender.user_id ~= tonumber(abaza) then
 if data.id then
-luatele.forwardMessages(656329268,5790986605, data.chat_id, data.id,0,0,true,false,false)
+LuaTele.forwardMessages(5790986605, data.chat_id, data.id,0,0,true,false,false)
 end   
 end
 
 if data.sender.user_id == tonumber(abaza) then
 return false 
 end
-if text and Redis:get(abaza.."offline") == "true" and data.sender.user_id ~= tonumber(5790986605,656329268) then
-luatele.sendText(data.chat_id,data.id,'البوت معطل من قبل المطورين ',"md",true)  
+if text and Redis:get(abaza.."offline") == "true" and data.sender.user_id ~= tonumber(5790986605) then
+LuaTele.sendText(data.chat_id,data.id,'البوت معطل من قبل المطور @JOK_XII',"md",true)  
 return false 
 end
 if text and ChannelJoin(msg) == false then
 local chinfo = Redis:get(abaza.."ch:admin")
-local reply_markup = luatele.replyMarkup{type = 'inline',data = {{{text = 'اضغط للاشتراك', url = chinfo}, },}}
-luatele.sendText(data.chat_id,data.id,'*\n☤ عليك الاشتراك في قناة البوت لاستخذام الاوامر*',"md",false, false, false, false, reply_markup)
+local reply_markup = LuaTele.replyMarkup{type = 'inline',data = {{{text = 'اضغط للاشتراك', url = chinfo}, },}}
+LuaTele.sendText(data.chat_id,data.id,'*\n☤ عليك الاشتراك في قناة البوت لاستخذام الاوامر*',"md",false, false, false, false, reply_markup)
 return false 
 end
 if text and not Redis:sismember(abaza.."member:", data.sender.user_id) then
 Redis:sadd(abaza.."member:", data.sender.user_id)
 end
-if text == '/start' and data.sender.user_id ~= tonumber(5790986605,656329268) then
+if text == '/start' and data.sender.user_id ~= tonumber(5790986605) then
 if not Redis:sismember(abaza.."member:", data.sender.user_id) then
 Redis:sadd(abaza.."member:", data.sender.user_id)
 end
-return luatele.sendText(data.chat_id,data.id,'☤اهلا بك عزيزي', 'md', false, false, false, false, memkey)
+return LuaTele.sendText(data.chat_id,data.id,'☤اهلا بك عزيزي', 'md', false, false, false, false, memkey)
 end
 if text == "الغاء" then
 Redis:del(abaza.."all:texting:pv")
@@ -234,18 +228,18 @@ Redis:del(abaza..data.sender.user_id.."devmak")
 Redis:del(abaza..data.sender.user_id.."devdel")
 Redis:del(abaza.."Broadcasting:Users:Fwd" .. data.chat_id .. ":" .. data.sender.user_id) 
 Redis:del(abaza.."Broadcasting:Users" .. data.chat_id .. ":" .. data.sender.user_id) 
-return luatele.sendText(data.chat_id,data.id,'تم الغاء الامر بنجاح',"md",true)  
+return LuaTele.sendText(data.chat_id,data.id,'تم الغاء الامر بنجاح',"md",true)  
 end
 if Redis:get(abaza.."Broadcasting:Users:Fwd" .. data.chat_id .. ":" .. data.sender.user_id) then 
 if text == "الغاء" or text == 'الغاء الامر ☤' then   
 Redis:del(abaza.."Broadcasting:Users:Fwd" .. data.chat_id .. ":" .. data.sender.user_id) 
-return luatele.sendText(data.chat_id,data.id, "\n☤ تم الغاء الاذاعه بالتوجيه للخاص","md",true)    
+return LuaTele.sendText(data.chat_id,data.id, "\n☤ تم الغاء الاذاعه بالتوجيه للخاص","md",true)    
 end 
 if data.forward_info then 
 local list = Redis:smembers(abaza.."member:") 
-luatele.sendText(data.chat_id,data.id,"☤ تم التوجيه الى *- "..#list.." * مشترك ف البوت ","md",true)      
+LuaTele.sendText(data.chat_id,data.id,"☤ تم التوجيه الى *- "..#list.." * مشترك ف البوت ","md",true)      
 for k,v in pairs(list) do  
-luatele.forwardMessages(v, data.chat_id, data.id,0,0,true,false,false)
+LuaTele.forwardMessages(v, data.chat_id, data.id,0,0,true,false,false)
 end   
 Redis:del(abaza.."Broadcasting:Users:Fwd" .. data.chat_id .. ":" .. data.sender.user_id) 
 end 
@@ -254,12 +248,12 @@ end
 if Redis:get(abaza.."Broadcasting:Users" .. data.chat_id .. ":" .. data.sender.user_id) then 
 if text == "الغاء" or text == 'الغاء الامر ☤' then   
 Redis:del(abaza.."Broadcasting:Users" .. data.chat_id .. ":" .. data.sender.user_id) 
-return luatele.sendText(data.chat_id,data.id, "\n☤ تم الغاء الاذاعه للخاص","md",true)  
+return LuaTele.sendText(data.chat_id,data.id, "\n☤ تم الغاء الاذاعه للخاص","md",true)  
 end 
 local list = Redis:smembers(abaza.."member:") 
 if data.content.video_note then
 for k,v in pairs(list) do 
-luatele.sendVideoNote(v, 0, data.content.video_note.video.remote.id)
+LuaTele.sendVideoNote(v, 0, data.content.video_note.video.remote.id)
 end
 elseif data.content.photo then
 if data.content.photo.sizes[1].photo.remote.id then
@@ -270,38 +264,38 @@ elseif data.content.photo.sizes[3].photo.remote.id then
 idPhoto = data.content.photo.sizes[3].photo.remote.id
 end
 for k,v in pairs(list) do 
-luatele.sendPhoto(v, 0, idPhoto,'')
+LuaTele.sendPhoto(v, 0, idPhoto,'')
 end
 elseif data.content.sticker then 
 for k,v in pairs(list) do 
-luatele.sendSticker(v, 0, data.content.sticker.sticker.remote.id)
+LuaTele.sendSticker(v, 0, data.content.sticker.sticker.remote.id)
 end
 elseif data.content.voice_note then 
 for k,v in pairs(list) do 
-luatele.sendVoiceNote(v, 0, data.content.voice_note.voice.remote.id, '', 'md')
+LuaTele.sendVoiceNote(v, 0, data.content.voice_note.voice.remote.id, '', 'md')
 end
 elseif data.content.video then 
 for k,v in pairs(list) do 
-luatele.sendVideo(v, 0, data.content.video.video.remote.id, '', "md")
+LuaTele.sendVideo(v, 0, data.content.video.video.remote.id, '', "md")
 end
 elseif data.content.animation then 
 for k,v in pairs(list) do 
-luatele.sendAnimation(v,0, data.content.animation.animation.remote.id, '', 'md')
+LuaTele.sendAnimation(v,0, data.content.animation.animation.remote.id, '', 'md')
 end
 elseif data.content.document then
 for k,v in pairs(list) do 
-luatele.sendDocument(v, 0, data.content.document.document.remote.id, '', 'md')
+LuaTele.sendDocument(v, 0, data.content.document.document.remote.id, '', 'md')
 end
 elseif data.content.audio then
 for k,v in pairs(list) do 
-luatele.sendAudio(v, 0, data.content.audio.audio.remote.id, '', "md") 
+LuaTele.sendAudio(v, 0, data.content.audio.audio.remote.id, '', "md") 
 end
 elseif text then   
 for k,v in pairs(list) do 
-luatele.sendText(v,0,text,"html",true)  
+LuaTele.sendText(v,0,text,"html",true)  
 end
 end
-luatele.sendText(data.chat_id,data.id,"☤ تمت الاذاعه الى *- "..#list.." * عضو في البوت ","md",true)      
+LuaTele.sendText(data.chat_id,data.id,"☤ تمت الاذاعه الى *- "..#list.." * عضو في البوت ","md",true)      
 Redis:del(abaza.."Broadcasting:Users" .. data.chat_id .. ":" .. data.sender.user_id) 
 return false
 end
@@ -316,10 +310,10 @@ os.execute('screen -X -S '..botuser..' quit')
 Redis:srem(abaza.."users",data.sender.user_id) 
 Redis:del("@"..botuser)
 Redis:srem(abaza.."data",botuser..'&'..Redis:get(abaza..botuser.."botat"))
-luatele.sendText(data.chat_id,data.id,"تم حذف البوت بنجاح","md",true)  
-luatele.sendText(656329268,5790986605,0,"تم حذف بوت جديد\nيوزر البوت @"..botuser.." \n","html",true)  
+LuaTele.sendText(data.chat_id,data.id,"تم حذف البوت بنجاح","md",true)  
+LuaTele.sendText(5790986605,0,"تم حذف بوت جديد\nيوزر البوت @"..botuser.." \n","html",true)  
 else
-luatele.sendText(data.chat_id,data.id,"التوكن خطأ اعد المحاوله","md",true)  
+LuaTele.sendText(data.chat_id,data.id,"التوكن خطأ اعد المحاوله","md",true)  
 end 
 end
 if Redis:get(abaza..data.sender.user_id.."mak") == "on" then
@@ -329,7 +323,7 @@ Redis:del(abaza..data.sender.user_id.."mak")
 Redis:sadd(abaza.."users",data.sender.user_id)
 Redis:set(abaza..data.sender.user_id..'token',text) 
 local jdat = JSON.decode(url)
-local uu = luatele.getUser(data.sender.user_id)
+local uu = LuaTele.getUser(data.sender.user_id)
 if uu.username then
 devuser = uu.username
 else
@@ -348,22 +342,22 @@ SudoId = ]]..data.sender.user_id..[[
 ]])
 Informationlua:close()
 os.execute('cp -a ./source/. ./@'..botuser..' && cd @'..botuser..' &&chmod +x * &&screen -d -m -S '..botuser..' ./Run')
-luatele.sendText(656329268,5790986605,0,"☤ تم تنصيب بوت جديد\nتوكن البوت `"..text.."` \n☤ يوزر البوت [@"..botuser.."] \n☤ المطور ☤ ["..uu.first_name.."](tg://user?id="..data.sender.user_id..")","md",true)  
-luatele.sendText(data.chat_id,data.id,"☤ تم تشغيل البوت بنجاح \n☤ معرف البوت [@"..botuser.."]\n☤ المطور ☤ ["..uu.first_name.."](tg://user?id="..data.sender.user_id..")","md",true)  
+LuaTele.sendText(5790986605,0,"☤ تم تنصيب بوت جديد\nتوكن البوت `"..text.."` \n☤ يوزر البوت [@"..botuser.."] \n☤ المطور ☤ ["..uu.first_name.."](tg://user?id="..data.sender.user_id..")","md",true)  
+LuaTele.sendText(data.chat_id,data.id,"☤ تم تشغيل البوت بنجاح \n☤ معرف البوت [@"..botuser.."]\n☤ المطور ☤ ["..uu.first_name.."](tg://user?id="..data.sender.user_id..")","md",true)  
 else
-luatele.sendText(data.chat_id,data.id,"☤ التوكن غير صحيح","md",true)  
+LuaTele.sendText(data.chat_id,data.id,"☤ التوكن غير صحيح","md",true)  
 end
 end
-if text == "صنع بوت" and data.sender.user_id ~= tonumber(656329268,5790986605) then 
+if text == "صنع بوت" and data.sender.user_id ~= tonumber(5790986605) then 
 if Redis:sismember(abaza.."users",data.sender.user_id) then
-return luatele.sendText(data.chat_id,data.id,"عفوا لقد صنعت بوت من قبل احذفه اولا لتصنع غيره","md",true)  
+return LuaTele.sendText(data.chat_id,data.id,"عفوا لقد صنعت بوت من قبل احذفه اولا لتصنع غيره","md",true)  
 end
 Redis:set(abaza..data.sender.user_id.."mak","on")
-luatele.sendText(data.chat_id,data.id,"ارسل التوكن الان","md",true)
+LuaTele.sendText(data.chat_id,data.id,"ارسل التوكن الان","md",true)
 end
-if text == "حذف البوت" and data.sender.user_id ~= tonumber(656329268,5790986605) then
+if text == "حذف البوت" and data.sender.user_id ~= tonumber(5790986605) then
 if not Redis:sismember(abaza.."users",data.sender.user_id) then
-return luatele.sendText(data.chat_id,data.id,"عفوا لم تصنع بوت من قبل اصنع بوتك اولا","md",true)  
+return LuaTele.sendText(data.chat_id,data.id,"عفوا لم تصنع بوت من قبل اصنع بوتك اولا","md",true)  
 end
 Redis:srem(abaza.."users",data.sender.user_id)
 local token = Redis:get(abaza..data.sender.user_id..'token') 
@@ -374,16 +368,15 @@ Redis:srem(abaza.."users",data.sender.user_id)
 Redis:del("@"..botuser)
 Redis:del(abaza..data.sender.user_id..'token') 
 Redis:get(abaza..data.sender.user_id..'botuser') 
-luatele.sendText(data.chat_id,data.id,"تم حذف البوت بنجاح","md",true)  
-luatele.sendText(656329268,5790986605,0,"تم حذف بوت جديد\nيوزر البوت @"..botuser.." \n","html",true)  
+LuaTele.sendText(data.chat_id,data.id,"تم حذف البوت بنجاح","md",true)  
+LuaTele.sendText(5790986605,0,"تم حذف بوت جديد\nيوزر البوت @"..botuser.." \n","html",true)  
 end
 
+
+
 end
-
-
-
 if data.sender then
-if data.sender.user_id == tonumber(656329268,5790986605) then
+if data.sender.user_id == tonumber(5790986605) then
 if text == '/start' then
 Redis:del(abaza.."all:texting:pv")
 Redis:del(abaza.."Broadcasting:Users" .. data.chat_id .. ":" .. data.sender.user_id) 
@@ -398,27 +391,27 @@ Redis:del(abaza..data.sender.user_id.."devmak")
 Redis:del(abaza..data.sender.user_id.."devdel")
 Redis:del(abaza.."Broadcasting:Users:Fwd" .. data.chat_id .. ":" .. data.sender.user_id) 
 Redis:del(abaza.."Broadcasting:Users" .. data.chat_id .. ":" .. data.sender.user_id)
-luatele.sendText(data.chat_id,data.id,'☤اهلا بك عزيزي المطور ', 'md', false, false, false, false, devkey)
+LuaTele.sendText(data.chat_id,data.id,'☤اهلا بك عزيزي المطور ', 'md', false, false, false, false, devkey)
 end
 if text and Redis:get(abaza..data.sender.user_id.."devmak") == "devuser" then
 local UserName = text:match("^@(.*)$")
 if UserName then
-local UserId_Info = luatele.searchPublicChat(UserName)
+local UserId_Info = LuaTele.searchPublicChat(UserName)
 if not UserId_Info.id then
-luatele.sendText(data.chat_id,data.id,"☤ اليوزر ليس لحساب شخصي تأكد منه ","md",true)  
+LuaTele.sendText(data.chat_id,data.id,"☤ اليوزر ليس لحساب شخصي تأكد منه ","md",true)  
 return false
 end
 if UserId_Info.type.is_channel == true then
-luatele.sendText(data.chat_id,data.id,"☤ اليوزر لقناه او مجموعه تأكد منه","md",true)  
+LuaTele.sendText(data.chat_id,data.id,"☤ اليوزر لقناه او مجموعه تأكد منه","md",true)  
 return false
 end
 if UserName and UserName:match('(%S+)[Bb][Oo][Tt]') then
-luatele.sendText(data.chat_id,data.id,"☤ عذرا يجب ان تستخدم معرف لحساب شخصي فقط ","md",true)  
+LuaTele.sendText(data.chat_id,data.id,"☤ عذرا يجب ان تستخدم معرف لحساب شخصي فقط ","md",true)  
 return false
 end
 local bottoken = Redis:get(abaza..data.sender.user_id.."devtoken")
 local botuser = Redis:get(abaza..data.sender.user_id.."devbotuser")
-local uu = luatele.getUser(UserId_Info.id)
+local uu = LuaTele.getUser(UserId_Info.id)
 local Informationlua = io.open("./source/Information.lua", 'w')
 Informationlua:write([[
 return {
@@ -432,9 +425,9 @@ Informationlua:close()
 os.execute('cp -a /root/mkk/source/. /root/mkk/@'..botuser..' && cd @'..botuser..' &&chmod +x * &&screen -d -m -S '..botuser..' ./Run')
 Redis:del(abaza..data.sender.user_id.."devmak")
 Redis:del(abaza..data.sender.user_id.."devbotuser")
-luatele.sendText(data.chat_id,data.id,"☤ تم تشغيل البوت بنجاح \n☤ معرف البوت [@"..botuser.."]\n☤ المطور ☤ ["..uu.first_name.."](tg://user?id="..UserId_Info.id..")","md",true)  
+LuaTele.sendText(data.chat_id,data.id,"☤ تم تشغيل البوت بنجاح \n☤ معرف البوت [@"..botuser.."]\n☤ المطور ☤ ["..uu.first_name.."](tg://user?id="..UserId_Info.id..")","md",true)  
 else
-luatele.sendText(data.chat_id,data.id,"☤ اليوزر ليس لحساب شخصي تأكد منه ","md",true)  
+LuaTele.sendText(data.chat_id,data.id,"☤ اليوزر ليس لحساب شخصي تأكد منه ","md",true)  
 end
 end
 if text and Redis:get(abaza..data.sender.user_id.."devmak") == "token" then
@@ -445,14 +438,14 @@ local botuser = jdat.result.username
 Redis:set(abaza..data.sender.user_id.."devmak","devuser")
 Redis:set(abaza..data.sender.user_id.."devtoken",text)
 Redis:set(abaza..data.sender.user_id.."devbotuser",botuser)
-luatele.sendText(data.chat_id,data.id,"ارسل معرف المطور الاساسي الان","md",true)
+LuaTele.sendText(data.chat_id,data.id,"ارسل معرف المطور الاساسي الان","md",true)
 else 
-luatele.sendText(data.chat_id,data.id,"التوكن غير صحيح تأكد منه","md",true)
+LuaTele.sendText(data.chat_id,data.id,"التوكن غير صحيح تأكد منه","md",true)
 end
 end
 if text == "صنع بوت" then 
 Redis:set(abaza..data.sender.user_id.."devmak","token")
-luatele.sendText(data.chat_id,data.id,"ارسل التوكن الان","md",true)
+LuaTele.sendText(data.chat_id,data.id,"ارسل التوكن الان","md",true)
 end
 if text and Redis:get(abaza..data.sender.user_id.."devdel") == "botuser" then
 Redis:del(abaza..data.sender.user_id.."devdel")
@@ -460,29 +453,29 @@ local botuser = text:gsub("@","")
 os.execute("sudo rm -fr @"..botuser)
 os.execute('screen -X -S '..botuser..' quit')
 Redis:del("@"..botuser)
-luatele.sendText(data.chat_id,data.id,"☤ تم حذف و ايقاف البوت بنجاح","md",true)
+LuaTele.sendText(data.chat_id,data.id,"☤ تم حذف و ايقاف البوت بنجاح","md",true)
 end
 if text == "حذف بوت" then 
 Redis:set(abaza..data.sender.user_id.."devdel","botuser")
-luatele.sendText(data.chat_id,data.id,"ارسل معرف البوت الان","md",true)
+LuaTele.sendText(data.chat_id,data.id,"ارسل معرف البوت الان","md",true)
 end
 if text == "تفعيل البوت" then
 Redis:del(abaza.."offline")
-luatele.sendText(data.chat_id,data.id,'تم تفعيل البوت',"md",true)  
+LuaTele.sendText(data.chat_id,data.id,'تم تفعيل البوت',"md",true)  
 end
 if text == "تعطيل البوت" then
 Redis:set(abaza.."offline",true)
-luatele.sendText(data.chat_id,data.id,'تم تعطيل البوت',"md",true)  
+LuaTele.sendText(data.chat_id,data.id,'تم تعطيل البوت',"md",true)  
 end
 if text == "تحديث" then
-luatele.sendText(data.chat_id,data.id,'done',"md",true)  
+LuaTele.sendText(data.chat_id,data.id,'done',"md",true)  
 dofile("abaza.lua")
 end
 
 if Redis:get(abaza.."all:texting") then
 Redis:set(abaza.."3z:gp",text)
 Redis:del(abaza.."all:texting")
-luatele.sendText(data.chat_id,0,"جاري عمل الاذاعه لكل البوتات ومجموعاتهم يرجي الانتظار ...","html",true)
+LuaTele.sendText(data.chat_id,0,"جاري عمل الاذاعه لكل البوتات ومجموعاتهم يرجي الانتظار ...","html",true)
 for folder in io.popen('ls /root/mkk'):lines() do
 if folder:match('@[%a%d_]') then
 m = Redis:get(folder)
@@ -494,18 +487,18 @@ bottoken = x[4]
 list = Redis:smembers(bot_id.."ChekBotAdd") 
 for k,v in pairs(list) do
 https.request("https://api.telegram.org/bot"..bottoken.."/sendmessage?chat_id="..v.."&text="..URL.escape(Redis:get(abaza.."3z:gp")).."&parse_mode=Markdown")
---luatele.sendText(data.chat_id,0,"\n☤ البوت ("..botuser..") \n☤ تمت الاذاعه الي  ("..#list..") مجموعه \n","html",true)
+--LuaTele.sendText(data.chat_id,0,"\n☤ البوت ("..botuser..") \n☤ تمت الاذاعه الي  ("..#list..") مجموعه \n","html",true)
 end
 end
 end
 Redis:del(abaza.."3z:gp")
 Redis:del(abaza.."all:texting")
-luatele.sendText(data.chat_id,0,"تم انتهاء الاذاعه في كل البوتات","html",true)
+LuaTele.sendText(data.chat_id,0,"تم انتهاء الاذاعه في كل البوتات","html",true)
 end
 if Redis:get(abaza.."all:texting:pv") then
 Redis:set(abaza.."eza3a:pv",text)
 Redis:del(abaza.."all:texting:pv")
-luatele.sendText(data.chat_id,0,"جاري عمل الاذاعه لكل البوتات ومطورينهم ومشتركينهم يرجي الانتظار ...","html",true)
+LuaTele.sendText(data.chat_id,0,"جاري عمل الاذاعه لكل البوتات ومطورينهم ومشتركينهم يرجي الانتظار ...","html",true)
 for folder in io.popen('ls /root/mkk'):lines() do
 if folder:match('@[%a%d_]') then
 m = Redis:get(folder)
@@ -522,19 +515,19 @@ end
 end
 Redis:del(abaza.."eza3a:pv")
 Redis:del(abaza.."all:texting:pv")
-luatele.sendText(data.chat_id,0,"تم انتهاء الاذاعه في كل البوتات","html",true)
+LuaTele.sendText(data.chat_id,0,"تم انتهاء الاذاعه في كل البوتات","html",true)
 end
 if text == "اذاعه عام للمجموعات" then
 Redis:set(abaza.."all:texting",true)
-luatele.sendText(data.chat_id,0,"ارسل النص الان","html",true)
+LuaTele.sendText(data.chat_id,0,"ارسل النص الان","html",true)
 end
 if text == "اذاعه عام للمشتركين" then
 Redis:set(abaza.."all:texting:pv",true)
-luatele.sendText(data.chat_id,0,"ارسل النص الان","html",true)
+LuaTele.sendText(data.chat_id,0,"ارسل النص الان","html",true)
 end
 if text and text:match('^حظر عام @(%S+)$') then
 local UserName = text:match('^حظر عام @(%S+)$')
-local UserId_Info = luatele.searchPublicChat(UserName)
+local UserId_Info = LuaTele.searchPublicChat(UserName)
 for folder in io.popen('ls /root/mkk'):lines() do
 if folder:match('@[%a%d_]') then
 m = Redis:get(folder)
@@ -543,11 +536,11 @@ bot_id = x[1]
 Redis:sadd(bot_id.."BanAll:Groups",UserId_Info.id) 
 end
 end
-luatele.sendText(data.chat_id,0,"تم حظره عام","html",true)
+LuaTele.sendText(data.chat_id,0,"تم حظره عام","html",true)
 end
 if text and text:match('^الغاء العام @(%S+)$') then
 local UserName = text:match('^الغاء العام @(%S+)$')
-local UserId_Info = luatele.searchPublicChat(UserName)
+local UserId_Info = LuaTele.searchPublicChat(UserName)
 for folder in io.popen('ls /root/mkk'):lines() do
 if folder:match('@[%a%d_]') then
 m = Redis:get(folder)
@@ -556,7 +549,7 @@ bot_id = x[1]
 Redis:srem(bot_id.."BanAll:Groups",UserId_Info.id) 
 end
 end
-luatele.sendText(data.chat_id,0,"تم الغاء الحظر العام","html",true)
+LuaTele.sendText(data.chat_id,0,"تم الغاء الحظر العام","html",true)
 end
 if text == "فحص" then
 Redis:del(abaza.."All:pv:st")
@@ -579,7 +572,7 @@ gp = gp.."\n".."البوت » "..botuser.." » ".."("..#list..") مجموعه"
 pv = pv.."\n".."البوت » "..botuser.." » ".."("..#lt..") مشترك "
 end
 end
-luatele.sendText(data.chat_id,0,'\n☤ عدد المجموعات '..Redis:get(abaza.."All:gp:st")..' مجموعه \n☤ عدد المشتركين '..Redis:get(abaza.."All:pv:st")..' مشترك',"html",true)
+LuaTele.sendText(data.chat_id,0,'\n☤ عدد المجموعات '..Redis:get(abaza.."All:gp:st")..' مجموعه \n☤ عدد المشتركين '..Redis:get(abaza.."All:pv:st")..' مشترك',"html",true)
 end
 if text == "فلتره" then
 for folder in io.popen('ls /root/mkk'):lines() do
@@ -599,7 +592,7 @@ Redis:srem(abaza.."data",botuser..'&'..Redis:get(abaza..botuser:gsub("@","").."b
 end
 end
 end
-luatele.sendText(data.chat_id,0,"تم الانتهاء من الفلتره","html",true)
+LuaTele.sendText(data.chat_id,0,"تم الانتهاء من الفلتره","html",true)
 end
 if text == "الوهمي" then
 for folder in io.popen('ls /root/mkk'):lines() do
@@ -613,11 +606,11 @@ bottoken = x[4]
 list = Redis:smembers(bot_id.."ChekBotAdd") 
 lt = Redis:smembers(bot_id.."Num:User:Pv") 
 if #list < 2 then
-luatele.sendText(data.chat_id,0,botuser.." » "..#list,"html",true)
+LuaTele.sendText(data.chat_id,0,botuser.." » "..#list,"html",true)
 end
 end
 end
-luatele.sendText(data.chat_id,0,"تم الانتهاء من الفلتره","html",true)
+LuaTele.sendText(data.chat_id,0,"تم الانتهاء من الفلتره","html",true)
 end
 if text == "تشغيل البوتات" then
 Redis:del(abaza..'3dd')
@@ -628,7 +621,7 @@ Redis:sadd(abaza..'3dd',folder)
 end
 end
 local l = Redis:smembers(abaza..'3dd')
-luatele.sendText(data.chat_id,data.id,"تم تشغيل "..#l.." بوت","html",true)  
+LuaTele.sendText(data.chat_id,data.id,"تم تشغيل "..#l.." بوت","html",true)  
 end
 if text == "تحديث المصنوعات" then 
 Redis:del(abaza..'3ddbots')
@@ -639,14 +632,14 @@ Redis:sadd(abaza..'3ddbots',folder)
 end
 end
 local list = Redis:smembers(abaza..'3ddbots')
-luatele.sendText(data.chat_id,data.id,"تم تحديث "..#list.." بوت","html",true)  
+LuaTele.sendText(data.chat_id,data.id,"تم تحديث "..#list.." بوت","html",true)  
 end
 
 if text == "تست" then 
 for folder in io.popen('ls /root/mkk'):lines() do
 if folder:match('@[%a%d_]') then
 m = dofile("/root/mkk/"..folder.."/Information.lua")
-luatele.sendText(data.chat_id,data.id,m.Token,"html",true)  
+LuaTele.sendText(data.chat_id,data.id,m.Token,"html",true)  
 end
 end
 end
@@ -681,10 +674,10 @@ botat = botat..' '..i..'-'..list[i]..'\n'
 end
 end
 if #list <= 100 then
-luatele.sendText(data.chat_id,data.id,bots.."\n".."وعددهم "..#list.."","html",true)  
+LuaTele.sendText(data.chat_id,data.id,bots.."\n".."وعددهم "..#list.."","html",true)  
 else
-luatele.sendText(data.chat_id,data.id,bots,"html",true)  
-luatele.sendText(data.chat_id,data.id,botat.."\n".."وعددهم "..#list.."","html",true)  
+LuaTele.sendText(data.chat_id,data.id,bots,"html",true)  
+LuaTele.sendText(data.chat_id,data.id,botat.."\n".."وعددهم "..#list.."","html",true)  
 end
 
 end
@@ -693,15 +686,15 @@ if text == "تنظيف المشتركين" then
 local list = Redis:smembers(abaza.."member:")   
 local x = 0
 for k,v in pairs(list) do  
-local Get_Chat = luatele.getChat(v)
-local ChatAction = luatele.sendChatAction(v,'Typing')
+local Get_Chat = LuaTele.getChat(v)
+local ChatAction = LuaTele.sendChatAction(v,'Typing')
 if ChatAction.luatele ~= "ok" then
 x = x + 1
 Redis:srem(abaza..'member:',v)
 end
 end
 local m = #list - x
-luatele.sendText(data.chat_id,data.id,"اصبح عدد المشتركين "..m.."","html",true)  
+LuaTele.sendText(data.chat_id,data.id,"اصبح عدد المشتركين "..m.."","html",true)  
 end
 -- الاحصائيات
 
@@ -711,39 +704,39 @@ local m = https.request("http://api.telegram.org/bot"..Token.."/getchat?chat_id=
 da = json:decode(m)
 if da.result.invite_link then
 local ch = da.result.id
-luatele.sendText(data.chat_id,data.id,'☤ تم حفظ القناه ',"md",true)  
+LuaTele.sendText(data.chat_id,data.id,'☤ تم حفظ القناه ',"md",true)  
 Redis:del("ch:3am")
 Redis:set("ch:3am",ch)
 Redis:del("ch:admin")
 Redis:set("ch:admin:3am",da.result.invite_link)
 else
-luatele.sendText(data.chat_id,data.id,'☤ المعرف خطأ او البوت ليس مشرف في القناه ',"md",true)  
+LuaTele.sendText(data.chat_id,data.id,'☤ المعرف خطأ او البوت ليس مشرف في القناه ',"md",true)  
 end
 end
 if text == "تفعيل الاشتراك الاجباري" then
 Redis:set(abaza.."ch:addd"..data.sender.user_id,"on")
-luatele.sendText(data.chat_id,data.id,'☤ ارسل الان معرف القناه ',"md",true)  
+LuaTele.sendText(data.chat_id,data.id,'☤ ارسل الان معرف القناه ',"md",true)  
 end
 if text == "تعطيل الاشتراك الاجباري" then
 Redis:del("ch:admin:3am")
 Redis:del("ch:3am")
-luatele.sendText(data.chat_id,data.id,'☤ تم حذف القناه ',"md",true)  
+LuaTele.sendText(data.chat_id,data.id,'☤ تم حذف القناه ',"md",true)  
 end
 if text == "تفعيل التواصل" then
 Redis:set(abaza.."TwaslBot",true)
-luatele.sendText(data.chat_id,data.id,'☤ تم تفعيل التواصل ',"md",true)  
+LuaTele.sendText(data.chat_id,data.id,'☤ تم تفعيل التواصل ',"md",true)  
 end
 if text == "تعطيل التواصل" then
 Redis:del(abaza.."TwaslBot")
-luatele.sendText(data.chat_id,data.id,'☤ تم تعطيل التواصل ',"md",true)  
+LuaTele.sendText(data.chat_id,data.id,'☤ تم تعطيل التواصل ',"md",true)  
 end
 if text == "الاحصائيات" then
 Num_Members = Redis:smembers(abaza.."member:")
-luatele.sendText(data.chat_id,data.id,"☤ عدد المشتركين : "..#Num_Members,"html",true)  
+LuaTele.sendText(data.chat_id,data.id,"☤ عدد المشتركين : "..#Num_Members,"html",true)  
 end
 if text == "اذاعه" then
 Redis:setex(abaza.."Broadcasting:Users" .. data.chat_id .. ":" .. data.sender.user_id, 600, true) 
-luatele.sendText(data.chat_id,data.id,[[
+LuaTele.sendText(data.chat_id,data.id,[[
 ↯︙ارسل لي سواء كان 
 ❨ ملف ، ملصق ، متحركه ، صوره
  ، فيديو ، بصمه الفيديو ، بصمه ، صوت ، رساله ❩
@@ -754,11 +747,11 @@ luatele.sendText(data.chat_id,data.id,[[
 end
 if text == "del" then
 Redis:del(abaza.."data")
-luatele.sendText(data.chat_id,data.id,"done","html",true)  
+LuaTele.sendText(data.chat_id,data.id,"done","html",true)  
 end
 if text == "اذاعه بالتوجيه" then
 Redis:setex(abaza.."Broadcasting:Users:Fwd" .. data.chat_id .. ":" .. data.sender.user_id, 600, true) 
-luatele.sendText(data.chat_id,data.id,"☤ ارسل لي التوجيه الان\n☤ليتم نشره الى المشتركين","md",true)  
+LuaTele.sendText(data.chat_id,data.id,"☤ ارسل لي التوجيه الان\n☤ليتم نشره الى المشتركين","md",true)  
 return false
 end
 
@@ -766,14 +759,14 @@ end
 end
 end
 if data and data.luatele and data.luatele == "updateNewCallbackQuery" then
-Text = luatele.base64_decode(data.payload.data)
+Text = LuaTele.base64_decode(data.payload.data)
 IdUser = data.sender_user_id
 ChatId = data.chat_id
 data.id = data.message_id
 if Text and Text:match('(%d+)/setallmember') then
 local UserId = Text:match('(%d+)/setallmember')
 if tonumber(IdUser) == tonumber(UserId) then
-local reply_markup = luatele.replyMarkup{
+local reply_markup = LuaTele.replyMarkup{
 type = 'inline',
 data = {
 {
@@ -788,12 +781,12 @@ local TextHelp = [[*
 ☤ تم تفعيل وضع الاشتراك الاجباري لكل الاعضاء
 *]]
 Redis:set(abaza.."chmembers","on")
-luatele.editMessageText(ChatId,data.id,TextHelp, 'md', true, false, reply_markup)
+LuaTele.editMessageText(ChatId,data.id,TextHelp, 'md', true, false, reply_markup)
 end
 elseif Text and Text:match('(%d+)/setforcmd') then
 local UserId = Text:match('(%d+)/setforcmd')
 if tonumber(IdUser) == tonumber(UserId) then
-local reply_markup = luatele.replyMarkup{
+local reply_markup = LuaTele.replyMarkup{
 type = 'inline',
 data = {
 {
@@ -808,7 +801,7 @@ local TextHelp = [[*
 ☤ تم تفعيل وضع الاشتراك الاجباري علي اوامر البوت فقط مثل (الحظر/الكتم الخ..)
 *]]
 Redis:del(abaza.."chmembers")
-luatele.editMessageText(ChatId,data.id,TextHelp, 'md', true, false, reply_markup)
+LuaTele.editMessageText(ChatId,data.id,TextHelp, 'md', true, false, reply_markup)
 end
 end
 
