@@ -917,7 +917,7 @@ data = {
 },
 }
 }
-send(msg.chat_id,msg.id,"◉ مرحبا عزيزي في مصنع الحمايه المجاني لسورس اباظة \n◉ مبرمج السورس @B100Q","html",true, false, false, true, reply_markup)
+send(msg.chat_id,msg.id,"◉ مرحبا عزيزي في مصنع الحمايه المجاني لسورس اباظة \n◉ مبرمج السورس @B100Q ، @JOK_YY8","html",true, false, false, true, reply_markup)
 return false 
 end
 ---making user
