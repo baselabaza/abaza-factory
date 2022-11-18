@@ -21870,7 +21870,10 @@ keyboardd.inline_keyboard = {
 {text = '➕ اضفني لمجموعتك', url = 't.me/'..UserBot..'?startgroup=new'}, 
 },
 {
-{text = '- لتنصيب بوت', url = 'https://t.me/JJXXH'}, 
+{text = '- لـصـنـع بـوت مـجـانـي 🤖.',url="https://t.me/ABAZAFACBOT"}
+},
+{
+{text = '- مـزيـد مـن الـبـوتـات الـمـجـانـيـة 💻.',url="https://t.me/B100T"}
 },
 {
 {text = '- قناة السورس .', url = 't.me/JJXXH'}, 
