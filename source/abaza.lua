@@ -19960,7 +19960,7 @@ if text == 'السورس' and ChCheck(msg) or text == 'سورس' and ChCheck(msg
 
 keyboard = {} 
 keyboard.inline_keyboard = {
-{{text = '- قـنـاة الـسـورس 📖 .',url="t.me/JJXXH"},
+{{text = '- قـنـاة الـسـورس 📖 .',url="t.me/JJXXH"}},
 {{text = '- تـواصـل الـسـورس 💬.',url="https://t.me/Abazaxbot"}},
 {{text = '- مـطـوري الـسـورس🔮',url="https://telegra.ph/ABAZA-11-12-4"}},
 {{text = '𝙰𝙱𝙰𝚉𝙰 𝙼𝚄𝚂𝙸𝙲 🎧.',url="https://t.me/xmusicbbot"}},
