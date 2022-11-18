@@ -19961,11 +19961,11 @@ if text == 'السورس' and ChCheck(msg) or text == 'سورس' and ChCheck(msg
 keyboard = {} 
 keyboard.inline_keyboard = {
 {{text = '- قـنـاة الـسـورس 📖 .',url="t.me/JJXXH"},
-{text = '- جـروب الـدعـم 📜.',url="t.me/abazaxx"}},
 {{text = '- تـواصـل الـسـورس 💬.',url="https://t.me/Abazaxbot"}},
 {{text = '- مـطـوري الـسـورس🔮',url="https://telegra.ph/ABAZA-11-12-4"}},
 {{text = '𝙰𝙱𝙰𝚉𝙰 𝙼𝚄𝚂𝙸𝙲 🎧.',url="https://t.me/xmusicbbot"}},
-{{text = '- مـزيـد مـن الـبـوتـات 🤖.',url="https://t.me/B100T"}},
+{{text = '- لـصـنـع بـوت مـجـانـي 🤖.',url="https://t.me/ABAZAFACBOT"}},
+{{text = '- مـزيـد مـن الـبـوتـات الـمـجـانـيـة 💻.',url="https://t.me/B100T"}},
 }
 local msg_id = msg.id/2097152/0.5
 return https.request("https://api.telegram.org/bot"..Token..'/sendPhoto?chat_id=' .. msg.chat_id .. '&photo=https://t.me/JJXXH&caption=' .. URL.escape([[
