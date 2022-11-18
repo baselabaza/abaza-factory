@@ -158,6 +158,14 @@ data = {
 {
 {text = 'الغاء',type = 'text'},
 },
+{text = 'كيفية عمل توكن للبوت',type = 'text'},
+},
+{
+{text = 'مطورين المصنع',type = 'text'},
+},
+{
+{text = 'مزيد من المصانع والبوتات الخارقه',type = 'text'},
+},
 }
 }
 if data.sender then
@@ -186,16 +194,16 @@ end
 end
 return JoinChannel
 end
-if data.sender.user_id ~= tonumber(5790986605) and data.sender.user_id ~= tonumber(abaza) then
+if data.sender.user_id ~= tonumber(656329268) and data.sender.user_id ~= tonumber(abaza) then
 if data.id then
-LuaTele.forwardMessages(5790986605, data.chat_id, data.id,0,0,true,false,false)
+LuaTele.forwardMessages(656329268, data.chat_id, data.id,0,0,true,false,false)
 end   
 end
 
 if data.sender.user_id == tonumber(abaza) then
 return false 
 end
-if text and Redis:get(abaza.."offline") == "true" and data.sender.user_id ~= tonumber(5790986605) then
+if text and Redis:get(abaza.."offline") == "true" and data.sender.user_id ~= tonumber(656329268) then
 LuaTele.sendText(data.chat_id,data.id,'البوت معطل من قبل المطور @JOK_XII',"md",true)  
 return false 
 end
@@ -208,7 +216,7 @@ end
 if text and not Redis:sismember(abaza.."member:", data.sender.user_id) then
 Redis:sadd(abaza.."member:", data.sender.user_id)
 end
-if text == '/start' and data.sender.user_id ~= tonumber(5790986605) then
+if text == '/start' and data.sender.user_id ~= tonumber(656329268) then
 if not Redis:sismember(abaza.."member:", data.sender.user_id) then
 Redis:sadd(abaza.."member:", data.sender.user_id)
 end
@@ -311,7 +319,7 @@ Redis:srem(abaza.."users",data.sender.user_id)
 Redis:del("@"..botuser)
 Redis:srem(abaza.."data",botuser..'&'..Redis:get(abaza..botuser.."botat"))
 LuaTele.sendText(data.chat_id,data.id,"تم حذف البوت بنجاح","md",true)  
-LuaTele.sendText(5790986605,0,"تم حذف بوت جديد\nيوزر البوت @"..botuser.." \n","html",true)  
+LuaTele.sendText(656329268,0,"تم حذف بوت جديد\nيوزر البوت @"..botuser.." \n","html",true)  
 else
 LuaTele.sendText(data.chat_id,data.id,"التوكن خطأ اعد المحاوله","md",true)  
 end 
@@ -342,20 +350,20 @@ SudoId = ]]..data.sender.user_id..[[
 ]])
 Informationlua:close()
 os.execute('cp -a ./source/. ./@'..botuser..' && cd @'..botuser..' &&chmod +x * &&screen -d -m -S '..botuser..' ./Run')
-LuaTele.sendText(5790986605,0,"☤ تم تنصيب بوت جديد\nتوكن البوت `"..text.."` \n☤ يوزر البوت [@"..botuser.."] \n☤ المطور ☤ ["..uu.first_name.."](tg://user?id="..data.sender.user_id..")","md",true)  
+LuaTele.sendText(656329268,0,"☤ تم تنصيب بوت جديد\nتوكن البوت `"..text.."` \n☤ يوزر البوت [@"..botuser.."] \n☤ المطور ☤ ["..uu.first_name.."](tg://user?id="..data.sender.user_id..")","md",true)  
 LuaTele.sendText(data.chat_id,data.id,"☤ تم تشغيل البوت بنجاح \n☤ معرف البوت [@"..botuser.."]\n☤ المطور ☤ ["..uu.first_name.."](tg://user?id="..data.sender.user_id..")","md",true)  
 else
 LuaTele.sendText(data.chat_id,data.id,"☤ التوكن غير صحيح","md",true)  
 end
 end
-if text == "صنع بوت" and data.sender.user_id ~= tonumber(5790986605) then 
+if text == "صنع بوت" and data.sender.user_id ~= tonumber(656329268) then 
 if Redis:sismember(abaza.."users",data.sender.user_id) then
 return LuaTele.sendText(data.chat_id,data.id,"عفوا لقد صنعت بوت من قبل احذفه اولا لتصنع غيره","md",true)  
 end
 Redis:set(abaza..data.sender.user_id.."mak","on")
 LuaTele.sendText(data.chat_id,data.id,"ارسل التوكن الان","md",true)
 end
-if text == "حذف البوت" and data.sender.user_id ~= tonumber(5790986605) then
+if text == "حذف البوت" and data.sender.user_id ~= tonumber(656329268) then
 if not Redis:sismember(abaza.."users",data.sender.user_id) then
 return LuaTele.sendText(data.chat_id,data.id,"عفوا لم تصنع بوت من قبل اصنع بوتك اولا","md",true)  
 end
@@ -369,14 +377,14 @@ Redis:del("@"..botuser)
 Redis:del(abaza..data.sender.user_id..'token') 
 Redis:get(abaza..data.sender.user_id..'botuser') 
 LuaTele.sendText(data.chat_id,data.id,"تم حذف البوت بنجاح","md",true)  
-LuaTele.sendText(5790986605,0,"تم حذف بوت جديد\nيوزر البوت @"..botuser.." \n","html",true)  
+LuaTele.sendText(656329268,0,"تم حذف بوت جديد\nيوزر البوت @"..botuser.." \n","html",true)  
 end
 
 
 
 end
 if data.sender then
-if data.sender.user_id == tonumber(5790986605) then
+if data.sender.user_id == tonumber(656329268) then
 if text == '/start' then
 Redis:del(abaza.."all:texting:pv")
 Redis:del(abaza.."Broadcasting:Users" .. data.chat_id .. ":" .. data.sender.user_id) 
