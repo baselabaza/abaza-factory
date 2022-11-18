@@ -917,7 +917,7 @@ data = {
 },
 }
 }
-send(msg.chat_id,msg.id,"◉ مرحبا عزيزي في مصنع الحمايه المجاني لسورس بلاك \n◉ مبرمج السورس @xUV9c","html",true, false, false, true, reply_markup)
+send(msg.chat_id,msg.id,"◉ مرحبا عزيزي في مصنع الحمايه المجاني لسورس اباظة \n◉ مبرمج السورس @B100Q","html",true, false, false, true, reply_markup)
 return false 
 end
 ---making user
@@ -991,7 +991,7 @@ end
 ----
 
 if text == 'السورس' or text == 'سورس' or text == 'يا سورس' or text == 'source' then
-photo = "https://t.me/BLACK_TEAM_1/1406"
+photo = "https://telegra.ph/file/b11a5393051b915cc6bc1.jpg"
 local T =[[
 *⦑ Welcome to Source ⦒
 𓄰 ⦑ SOURCE ABAZA ⦒
@@ -1000,9 +1000,7 @@ local T =[[
 keyboard = {} 
 keyboard.inline_keyboard = {
 {
-{text = '᥉᥆υᖇᥴᥱ Ⴆᥣᥲ️ᥴk', url = 't.me/BLACK_TEAM_1'}, 
-},
-{{text = '- قـنـاة الـسـورس 📖 .',url="t.me/JJXXH"},{text = '- جـروب الـدعـم 📜.',url="t.me/abazaxx"},
+{text = '- قـنـاة الـسـورس 📖 .',url="t.me/JJXXH"},{text = '- جـروب الـدعـم 📜.',url="t.me/abazaxx"},
 },
 {
 {text = '- تـواصـل الـسـورس 💬.',url="https://t.me/Abazaxbot"},
